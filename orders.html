@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>My Orders - Vercel Topup BD</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* Core CSS Variables */
+:root {
+    --primary-purple: #7B61FF;
+    --light-purple: #E9E7FF;
+    --background-color: #F5F5F7; 
+    --card-bg-color: #ffffff;
+    --primary-text-color: #1D1D1F;
+    --secondary-text-color: #86868B;
+    --accent-green: #34C759;
+    --accent-red: #FF3B30;
+    --border-radius-large: 20px;
+    --border-radius-medium: 14px;
+    --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --nav-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+body.dark-mode {
+    --background-color: #000000; 
+    --card-bg-color: #1C1C1E; 
+    --primary-text-color: #F5F5F7;
+    --secondary-text-color: #8E8E93;
+    --light-purple: #2C2C2E;
+    --soft-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --nav-shadow: 0 -5px 20px rgba(255,255,255,0.05);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--primary-text-color);
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+    padding-bottom: 90px;
+}
+
+.app-container { 
+    width: 100%; max-width: 480px; margin: auto; 
+    background-color: var(--background-color);
+    min-height: 100vh; position: relative; padding: 20px;
+}
+
+/* Header */
+.page-header { 
+    display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px;
+}
+.page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: auto; }
+
+/* Order Card Styles */
+.topup-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 15px; box-shadow: var(--soft-shadow); }
+
+.status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: white; }
+.status-Pending { background-color: #FF9500; }
+.status-Approved, .status-Completed { background-color: #34C759; }
+.status-Rejected, .status-Canceled { background-color: var(--accent-red); }
+
+.action-buttons { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 10px;}
+
+.btn { 
+    display: block; width: 100%; 
+    background: var(--primary-purple); 
+    color: white; border: none; 
+    padding: 12px; 
+    border-radius: var(--border-radius-medium); 
+    font-size: 14px; font-weight: 600; 
+    cursor: pointer; text-align: center; 
+    transition: all 0.2s; 
+    box-shadow: 0 8px 20px rgba(123, 97, 255, 0.25); 
+}
+.btn:active { transform: scale(0.98); }
+.btn-danger { background: var(--accent-red); box-shadow: 0 8px 20px rgba(255, 59, 48, 0.25); }
+.btn-secondary { background: var(--secondary-text-color); box-shadow: none; }
+
+.copy-btn { margin-left: 10px; cursor: pointer; color: var(--primary-purple); background: rgba(123, 97, 255, 0.1); padding: 5px 10px; border-radius: 6px; font-size: 14px; transition: 0.2s;}
+.copy-btn:active { transform: scale(0.9); }
+
+/* Empty State */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--secondary-text-color); }
+.empty-state i { font-size: 55px; margin-bottom: 20px; display: block; color: var(--light-purple); }
+.empty-state p { font-size: 16px; font-weight: 500; }
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%;
+    max-width: 480px; height: 80px; display: flex; justify-content: space-between; align-items: center;
+    background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    padding: 0 20px; box-shadow: var(--nav-shadow); z-index: 1000;
+    border-top: 1px solid rgba(0,0,0,0.05); border-radius: 20px 20px 0 0;
+}
+body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-color: rgba(255, 255, 255, 0.05); }
+.nav-item { cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--secondary-text-color); position: relative; width: 60px; transition: color 0.3s; }
+.nav-item i { font-size: 22px; margin-bottom: 6px; transition: transform 0.2s; }
+.nav-item span { font-size: 11px; font-weight: 600; }
+.nav-item.active { color: var(--primary-purple); }
+.nav-item-center { position: relative; top: -25px; }
+.nav-item-center .icon-bg { 
+    width: 60px; height: 60px; background: var(--primary-purple); border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    box-shadow: 0 10px 25px rgba(123, 97, 255, 0.5); border: 6px solid var(--background-color); 
+    transition: transform 0.2s;
+}
+.nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
+.nav-badge {
+    position: absolute; top: 0; right: 15px; width: 10px; height: 10px;
+    background-color: var(--accent-red); border-radius: 50%; border: 2px solid var(--card-bg-color);
+    display: none; z-index: 5;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <header class="page-header">
+        <h2>মাই অর্ডার</h2>
+    </header>
+
+    <div id="orderHistoryContainer">
+        <!-- Orders will be loaded here -->
+        <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i><p>লোড হচ্ছে...</p></div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="window.location.href='index.html'"> <i class="fa-solid fa-house"></i> <span>হোম</span> </div>
+        <div class="nav-item" onclick="window.location.href='wallet.html'"> <i class="fa-solid fa-wallet"></i> <span>ওয়ালেট</span> </div>
+        <div class="nav-item nav-item-center" onclick="window.location.href='add-money.html'"> 
+            <div class="icon-bg"><i class="fa-solid fa-plus"></i></div> 
+            <span>অ্যাড</span> 
+        </div>
+        <div class="nav-item active" onclick="window.location.href='orders.html'"> 
+            <i class="fa-solid fa-receipt"></i> 
+            <span class="nav-badge" id="orderBadge"></span>
+            <span>অর্ডার</span> 
+        </div>
+        <div class="nav-item" onclick="window.location.href='profile.html'"> <i class="fa-regular fa-user"></i> <span>প্রোফাইল</span> </div>
+    </nav>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDjAnhVln8V-qpXDQmLWY8OTo7Qot01UPY",
+      authDomain: "topup24vercel.firebaseapp.com",
+      projectId: "topup24vercel",
+      storageBucket: "topup24vercel.firebasestorage.app",
+      messagingSenderId: "1054942807566",
+      appId: "1:1054942807566:web:953c23afdd81bf7d225e5f",
+      measurementId: "G-G700C4YP6W"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    const EDIT_WINDOW_MS = 3 * 60 * 1000; // 3 minutes
+
+    // Theme Check
+    if (localStorage.getItem('theme') === 'dark-mode') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // Auth Check
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            currentUser = user;
+            loadOrderHistory();
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
+
+    function loadOrderHistory() {
+        const container = document.getElementById('orderHistoryContainer');
+        const badge = document.getElementById('orderBadge');
+
+        db.collection('orders').where('userId', '==', currentUser.uid)
+        .onSnapshot(querySnapshot => {
+            if (querySnapshot.empty) {
+                container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-receipt"></i><p>কোনো অর্ডার পাওয়া যায়নি।</p></div>`;
+                badge.style.display = 'none'; 
+                return;
+            }
+
+            let orders = [];
+            let pendingCount = 0; 
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                orders.push({ id: doc.id, ...data });
+                if(data.status === 'Pending') pendingCount++;
+            });
+
+            badge.style.display = pendingCount > 0 ? 'block' : 'none';
+            
+            // Sort by Date Descending
+            orders.sort((a, b) => {
+                 const dateA = a.date ? a.date.seconds : 0;
+                 const dateB = b.date ? b.date.seconds : 0;
+                 return dateB - dateA;
+            });
+
+            let historyHtml = '';
+            orders.forEach(order => {
+                const orderId = order.id;
+                const orderDate = order.date ? order.date.toDate() : new Date();
+                const isEditable = (new Date() - orderDate) < EDIT_WINDOW_MS && order.status === 'Pending';
+                
+                const quantityText = order.quantity ? ` x ${order.quantity}` : '';
+
+                let buttons = '';
+                if (order.status === 'Pending') {
+                    buttons = `<div class="action-buttons">
+                            ${isEditable ? `<button class="btn btn-secondary" onclick="editOrder('${orderId}')">এডিট</button>` : ''}
+                            <button class="btn btn-danger" onclick="cancelOrder('${orderId}')">মুছে ফেলুন</button>
+                        </div>`;
+                }
+
+                // UNIPIN/Voucher Code Logic
+                let adminMessageHtml = '';
+                if (order.adminNote || order.voucherCode) { 
+                    const code = order.adminNote || order.voucherCode;
+                     adminMessageHtml = `
+                    <div style="background: rgba(52, 199, 89, 0.1); padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid #34C759;">
+                        <p style="font-size: 13px; font-weight: 700; color: #34C759; margin-bottom: 5px;">Code / Note:</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-family: monospace; font-size: 14px; color: var(--primary-text-color); word-break: break-all;">${code}</span>
+                            <i class="fa-regular fa-copy copy-btn" onclick="copyToClipboard('${code}')"></i>
+                        </div>
+                    </div>`;
+                }
+
+                historyHtml += `<div class="topup-section">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                        <span>গেম: <strong>${order.game}</strong></span>
+                        <span class="status-badge status-${order.status}">${order.status}</span>
+                    </div>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্যাকেজ:</span><strong>${order.package}${quantityText}</strong></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্লেয়ার আইডি:</span><strong>${order.playerId}</strong></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>দাম:</span><strong>৳ ${parseFloat(order.price).toFixed(2)}</strong></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>TrxID:</span><strong>${order.transactionId || 'N/A'}</strong></p>
+                    <p style="display:flex; justify-content:space-between; font-size: 14px; color: var(--secondary-text-color);"><span>তারিখ:</span><strong>${orderDate.toLocaleString('bn-BD')}</strong></p>
+                    ${adminMessageHtml}
+                    ${buttons}
+                </div>`;
+            });
+             container.innerHTML = historyHtml;
+        }, error => {
+            console.error("Error loading order history: ", error);
+        });
+    }
+
+    async function cancelOrder(orderId) {
+        if (!confirm('আপনি কি নিশ্চিতভাবে এই অর্ডারটি মুছে ফেলতে চান? যদি ওয়ালেট দিয়ে পেমেন্ট করে থাকেন, তবে টাকা ফেরত দেওয়া হবে।')) {
+            return;
+        }
+
+        try {
+            await db.runTransaction(async (transaction) => {
+                const orderRef = db.collection('orders').doc(orderId);
+                const orderDoc = await transaction.get(orderRef);
+
+                if (!orderDoc.exists) throw "অর্ডারটি পাওয়া যায়নি।";
+
+                const orderData = orderDoc.data();
+                if (orderData.status !== 'Pending') throw "এই অর্ডারটি এখন আর ক্যানসেল করা যাবে না।";
+
+                // Refund Logic if Wallet was used
+                if (orderData.transactionId === 'WALLET_PAY' || orderData.paymentMethod === 'Wallet' || orderData.paymentMethod === 'My Wallet') {
+                    const userRef = db.collection('users').doc(orderData.userId);
+                    const userDoc = await transaction.get(userRef);
+
+                    if (userDoc.exists) {
+                        const currentBalance = parseFloat(userDoc.data().walletBalance) || 0;
+                        const refundAmount = parseFloat(orderData.price);
+                        
+                        transaction.update(userRef, { 
+                            walletBalance: currentBalance + refundAmount 
+                        });
+                    }
+                }
+                
+                // Return stock logic could be added here if complex inventory management is needed, 
+                // but usually stock is restored manually or assumed minor for cancellations.
+                // For this code, we just delete the order.
+
+                transaction.delete(orderRef);
+            });
+
+            alert('অর্ডারটি সফলভাবে বাতিল করা হয়েছে।');
+
+        } catch (error) {
+            alert('সমস্যা হয়েছে: ' + (error.message || error));
+        }
+    }
+
+    async function editOrder(orderId) {
+        try {
+            const doc = await db.collection('orders').doc(orderId).get();
+            if (!doc.exists) { alert('অর্ডার পাওয়া যায়নি!'); return; }
+            const order = doc.data();
+            
+            const newPlayerId = prompt('আপনার নতুন প্লেয়ার আইডি দিন:', order.playerId);
+            const newTransactionId = prompt('নতুন ট্রানজেকশন আইডি দিন:', order.transactionId);
+
+            const updates = {};
+            if (newPlayerId && newPlayerId.trim() !== '' && newPlayerId !== order.playerId) {
+                updates.playerId = newPlayerId;
+            }
+            if (newTransactionId && newTransactionId.trim() !== '' && newTransactionId !== order.transactionId) {
+                updates.transactionId = newTransactionId;
+            }
+            
+            if (Object.keys(updates).length > 0) {
+                await db.collection('orders').doc(orderId).update(updates);
+                alert('অর্ডার সফলভাবে আপডেট করা হয়েছে!');
+            }
+        } catch (e) { alert('আপডেট করতে সমস্যা হয়েছে: ' + e.message); }
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('কপি করা হয়েছে: ' + text);
+        }).catch(err => console.error('Copy failed', err));
+    }
+</script>
+</body>
+</html>
