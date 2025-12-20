@@ -203,12 +203,12 @@
     // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyCZrkWD_5YQW0P-3SYhAzSE4pbCyTqvYu8",
-  authDomain: "topupshopnur.firebaseapp.com",
-  projectId: "topupshopnur",
-  storageBucket: "topupshopnur.firebasestorage.app",
-  messagingSenderId: "25262245834",
-  appId: "1:25262245834:web:5a867f0516b120bfbcb133",
-  measurementId: "G-QR5PYZDCG8"
+      authDomain: "topupshopnur.firebaseapp.com",
+      projectId: "topupshopnur",
+      storageBucket: "topupshopnur.firebasestorage.app",
+      messagingSenderId: "25262245834",
+      appId: "1:25262245834:web:5a867f0516b120bfbcb133",
+      measurementId: "G-QR5PYZDCG8"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -338,7 +338,8 @@
                     if (packageIndex === -1) throw "এই প্যাকেজটি এখন আর পাওয়া যাচ্ছে না।";
                     
                     const currentStock = parseInt(packages[packageIndex].stock);
-                    if (isNaN(currentStock) || currentStock < pending.quantity) throw "দুঃখিত! স্টকে পর্যাপ্ত পরিমাণ নেই।";
+                    //FIXED: Changed 'pending.quantity' to 'pendingOrder.quantity'
+                    if (isNaN(currentStock) || currentStock < pendingOrder.quantity) throw "দুঃখিত! স্টকে পর্যাপ্ত পরিমাণ নেই।";
 
                     // Deduct Stock
                     packages[packageIndex].stock = currentStock - pendingOrder.quantity;
