@@ -1107,15 +1107,22 @@ body.dark-mode .skeleton::before {
         };
     }
 
-    // FIXED: initEvent function
+    // FIXED: initEvent function to show title
     function initEvent() {
         db.collection('settings').doc('event').onSnapshot(doc => {
             const eventContainer = document.getElementById('eventSectionContainer');
             if (eventTimerInterval) clearInterval(eventTimerInterval);
 
             if (doc.exists && doc.data().isActive) {
+                const eventData = doc.data();
                 eventContainer.style.display = 'block';
-                const endTime = doc.data().endDate ? doc.data().endDate.toDate() : null;
+
+                const titleElement = document.getElementById('eventHeaderTitle');
+                if (titleElement && eventData.title) {
+                    titleElement.innerText = eventData.title;
+                }
+
+                const endTime = eventData.endDate ? eventData.endDate.toDate() : null;
                 const timerEl = document.getElementById('eventCountdown');
 
                 if (!endTime || !timerEl) {
