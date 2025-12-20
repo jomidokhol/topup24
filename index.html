@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Vercel Topup BD - Home</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic" crossorigin>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 /* Roboto font for Footer */
@@ -1107,26 +1107,37 @@ body.dark-mode .skeleton::before {
         };
     }
 
+    // FIXED: initEvent function
     function initEvent() {
         db.collection('settings').doc('event').onSnapshot(doc => {
-            const wrapper = document.querySelector('.event-section-wrapper');
-            if (doc.exists && doc.data().isActive && wrapper) {
-                const endTime = doc.data().endDate.toDate();
+            const eventContainer = document.getElementById('eventSectionContainer');
+            if (eventTimerInterval) clearInterval(eventTimerInterval);
+
+            if (doc.exists && doc.data().isActive) {
+                eventContainer.style.display = 'block';
+                const endTime = doc.data().endDate ? doc.data().endDate.toDate() : null;
                 const timerEl = document.getElementById('eventCountdown');
-                
+
+                if (!endTime || !timerEl) {
+                    if(timerEl) timerEl.parentElement.innerHTML = "No End Date";
+                    return;
+                }
+
                 eventTimerInterval = setInterval(() => {
                     const now = new Date().getTime();
                     const distance = endTime - now;
+
                     if (distance < 0) {
                         clearInterval(eventTimerInterval);
                         timerEl.parentElement.innerHTML = "EXPIRED";
                         const eventCards = document.querySelectorAll('#eventSectionContainer .game-card');
                         eventCards.forEach(card => {
                             card.classList.add('disabled');
-                            card.onclick = null; 
+                            card.onclick = null;
                         });
                         return;
                     }
+
                     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -1135,9 +1146,8 @@ body.dark-mode .skeleton::before {
                     const daysStr = days > 0 ? `${f(days)}d ` : '';
                     timerEl.innerHTML = daysStr + `${f(hours)}:${f(minutes)}:${f(seconds)}`;
                 }, 1000);
-            } else if (wrapper) {
-                wrapper.style.display = 'none';
-                document.getElementById('eventHeaderTitle').style.display = 'none';
+            } else {
+                eventContainer.style.display = 'none';
             }
         });
     }
