@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Order Confirmed - Vercel Topup BD</title>
+<title>My Orders - Vercel Topup BD</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,46 +71,40 @@ body {
 .page-header { 
     display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px;
 }
-.back-btn { font-size: 20px; cursor: pointer; margin-right: 15px; color: var(--primary-text-color); background: var(--card-bg-color); padding: 10px; border-radius: 50%; box-shadow: var(--soft-shadow); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;}
-.page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+.page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: auto; }
 
-/* Details Card Styles */
-.details-card { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 30px; text-align: center; box-shadow: var(--soft-shadow); margin-top: 20px; }
-.details-card .icon { font-size: 60px; color: var(--accent-green); margin-bottom: 20px; }
-.details-card h2 { font-size: 26px; margin-bottom: 10px; font-weight: 800; color: var(--primary-text-color); }
-.details-card p { color: var(--secondary-text-color); margin-bottom: 30px; font-size: 15px; }
+/* Order Card Styles */
+.topup-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 15px; box-shadow: var(--soft-shadow); }
 
-/* Summary List */
-.summary { text-align: left; background: var(--background-color); padding: 20px; border-radius: var(--border-radius-medium); }
-.summary-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-body.dark-mode .summary-item { border-color: rgba(255,255,255,0.05); }
-.summary-item:last-child { border-bottom: none; }
-.summary-item span { color: var(--secondary-text-color); font-size: 14px; font-weight: 500; }
-.summary-item strong { color: var(--primary-text-color); font-size: 14px; font-weight: 600; }
+.status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: white; }
+.status-Pending { background-color: #FF9500; }
+.status-Approved, .status-Completed { background-color: #34C759; }
+.status-Rejected, .status-Canceled { background-color: var(--accent-red); }
 
-/* Buttons */
+.action-buttons { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 10px;}
+
 .btn { 
     display: block; width: 100%; 
     background: var(--primary-purple); 
     color: white; border: none; 
-    padding: 18px; 
+    padding: 12px; 
     border-radius: var(--border-radius-medium); 
-    font-size: 16px; font-weight: 600; 
+    font-size: 14px; font-weight: 600; 
     cursor: pointer; text-align: center; 
     transition: all 0.2s; 
     box-shadow: 0 8px 20px rgba(123, 97, 255, 0.25); 
-    margin-top: 25px;
 }
 .btn:active { transform: scale(0.98); }
+.btn-danger { background: var(--accent-red); box-shadow: 0 8px 20px rgba(255, 59, 48, 0.25); }
+.btn-secondary { background: var(--secondary-text-color); box-shadow: none; }
 
-.btn-secondary { 
-    background: transparent; 
-    color: var(--secondary-text-color); 
-    box-shadow: none; 
-    border: 1px solid rgba(0,0,0,0.1);
-    margin-top: 15px;
-}
-body.dark-mode .btn-secondary { border-color: rgba(255,255,255,0.1); }
+.copy-btn { margin-left: 10px; cursor: pointer; color: var(--primary-purple); background: rgba(123, 97, 255, 0.1); padding: 5px 10px; border-radius: 6px; font-size: 14px; transition: 0.2s;}
+.copy-btn:active { transform: scale(0.9); }
+
+/* Empty State */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--secondary-text-color); }
+.empty-state i { font-size: 55px; margin-bottom: 20px; display: block; color: var(--light-purple); }
+.empty-state p { font-size: 16px; font-weight: 500; }
 
 /* Bottom Nav */
 .bottom-nav {
@@ -132,13 +127,18 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
     transition: transform 0.2s;
 }
 .nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
+.nav-badge {
+    position: absolute; top: 0; right: 15px; width: 10px; height: 10px;
+    background-color: var(--accent-red); border-radius: 50%; border: 2px solid var(--card-bg-color);
+    display: none; z-index: 5;
+}
 
 /* পরিবর্তন ২ শুরু: স্কেলিটাল লোডার CSS */
 .skeleton {
     background-color: var(--skeleton-bg);
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: var(--border-radius-medium);
 }
 .skeleton::before {
     content: '';
@@ -158,31 +158,28 @@ body.dark-mode .skeleton::before {
     100% { left: 150%; }
 }
 
-.skeleton-header { display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px; }
-.skeleton-back-btn { width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; }
-.skeleton-title { height: 26px; width: 200px; }
-
 .skeleton-card {
     background-color: var(--card-bg-color);
     border-radius: var(--border-radius-large);
-    padding: 30px;
+    padding: 25px;
+    margin-bottom: 15px;
     box-shadow: var(--soft-shadow);
-    margin-top: 20px;
+}
+.skeleton-line {
+    height: 18px;
+    margin-bottom: 12px;
+}
+.skeleton-header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
 }
-.skeleton-icon { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 20px; }
-.skeleton-h2 { height: 30px; width: 150px; margin-bottom: 10px; }
-.skeleton-p { height: 20px; width: 80%; margin-bottom: 30px; }
-.skeleton-summary {
-    width: 100%;
-    background: var(--background-color);
-    padding: 20px;
-    border-radius: var(--border-radius-medium);
+.skeleton-badge {
+    height: 24px;
+    width: 80px;
+    border-radius: 20px;
 }
-.skeleton-summary-item { height: 20px; width: 100%; margin: 12px 0; }
-.skeleton-btn { height: 58px; margin-top: 25px; border-radius: var(--border-radius-medium); }
 /* পরিবর্তন ২ শেষ */
 
 </style>
@@ -191,51 +188,46 @@ body.dark-mode .skeleton::before {
 
 <div class="app-container">
     
-    <!-- পরিবর্তন ২ শুরু: স্কেলিটাল লোডার HTML -->
-    <div id="skeleton-loader">
-        <div class="skeleton-header">
-            <div class="skeleton skeleton-back-btn"></div>
-            <div class="skeleton skeleton-title"></div>
-        </div>
-        <div class="skeleton-card">
-            <div class="skeleton skeleton-icon"></div>
-            <div class="skeleton skeleton-h2"></div>
-            <div class="skeleton skeleton-p"></div>
-            <div class="skeleton-summary">
-                <div class="skeleton skeleton-summary-item"></div>
-                <div class="skeleton skeleton-summary-item"></div>
-                <div class="skeleton skeleton-summary-item"></div>
-                <div class="skeleton skeleton-summary-item"></div>
+    <header class="page-header">
+        <h2>মাই অর্ডার</h2>
+    </header>
+
+    <div id="orderHistoryContainer">
+        <!-- পরিবর্তন ২ শুরু: স্কেলিটাল লোডার HTML -->
+        <div id="skeleton-loader">
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton skeleton-line" style="width: 60%;"></div>
+                    <div class="skeleton skeleton-badge"></div>
+                </div>
+                <div class="skeleton skeleton-line" style="width: 80%;"></div>
+                <div class="skeleton skeleton-line" style="width: 90%;"></div>
+                <div class="skeleton skeleton-line" style="width: 50%;"></div>
+                <div class="skeleton skeleton-line" style="width: 70%;"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton skeleton-line" style="width: 60%;"></div>
+                    <div class="skeleton skeleton-badge"></div>
+                </div>
+                <div class="skeleton skeleton-line" style="width: 80%;"></div>
+                <div class="skeleton skeleton-line" style="width: 90%;"></div>
+                <div class="skeleton skeleton-line" style="width: 50%;"></div>
+                <div class="skeleton skeleton-line" style="width: 70%;"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton skeleton-line" style="width: 60%;"></div>
+                    <div class="skeleton skeleton-badge"></div>
+                </div>
+                <div class="skeleton skeleton-line" style="width: 80%;"></div>
+                <div class="skeleton skeleton-line" style="width: 90%;"></div>
+                <div class="skeleton skeleton-line" style="width: 50%;"></div>
+                <div class="skeleton skeleton-line" style="width: 70%;"></div>
             </div>
         </div>
-        <div class="skeleton skeleton-btn"></div>
-        <div class="skeleton skeleton-btn" style="background-color: transparent; border: 1px solid var(--skeleton-bg); margin-top: 15px;"></div>
+        <!-- পরিবর্তন ২ শেষ -->
     </div>
-    <!-- পরিবর্তন ২ শেষ -->
-    
-    <!-- পরিবর্তন ২ শুরু: মূল কন্টেন্ট এখন হাইড থাকবে -->
-    <div id="main-content" style="display: none;">
-        <header class="page-header">
-            <i class="fa-solid fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
-            <h2>অর্ডার সম্পন্ন হয়েছে</h2>
-        </header>
-
-        <div class="details-card">
-            <div class="icon"><i class="fa-solid fa-check-circle"></i></div>
-            <h2>ধন্যবাদ!</h2>
-            <p>আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। বিস্তারিত নিচে দেখুন।</p>
-            
-            <div class="summary" id="orderSummary">
-                <!-- Data will be loaded here -->
-                <p style="text-align:center;">লোড হচ্ছে...</p>
-            </div>
-        </div>
-
-        <button class="btn" onclick="window.location.href='orders.html'">অর্ডার হিস্টোরি দেখুন</button>
-        <button class="btn btn-secondary" onclick="window.location.href='index.html'">হোম পেজে ফিরে যান</button>
-    </div>
-    <!-- পরিবর্তন ২ শেষ -->
-
 
     <!-- Bottom Nav -->
     <nav class="bottom-nav">
@@ -245,16 +237,21 @@ body.dark-mode .skeleton::before {
             <div class="icon-bg"><i class="fa-solid fa-plus"></i></div> 
             <span>অ্যাড</span> 
         </div>
-        <div class="nav-item" onclick="window.location.href='orders.html'"> <i class="fa-solid fa-receipt"></i> <span>অর্ডার</span> </div>
+        <div class="nav-item active" onclick="window.location.href='orders.html'"> 
+            <i class="fa-solid fa-receipt"></i> 
+            <span class="nav-badge" id="orderBadge"></span>
+            <span>অর্ডার</span> 
+        </div>
         <div class="nav-item" onclick="window.location.href='profile.html'"> <i class="fa-regular fa-user"></i> <span>প্রোফাইল</span> </div>
     </nav>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
 <script>
-    // Firebase Config (Only needed for Auth check consistency)
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyCZrkWD_5YQW0P-3SYhAzSE4pbCyTqvYu8",
       authDomain: "topupshopnur.firebaseapp.com",
@@ -264,37 +261,179 @@ body.dark-mode .skeleton::before {
       appId: "1:25262245834:web:5a867f0516b120bfbcb133",
       measurementId: "G-QR5PYZDCG8"
     };
+
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    const EDIT_WINDOW_MS = 3 * 60 * 1000; // 3 minutes
 
     // Theme Check
     if (localStorage.getItem('theme') === 'dark-mode') {
         document.body.classList.add('dark-mode');
     }
 
-    // Load Order Data
-    window.onload = function() {
-        const orderData = JSON.parse(localStorage.getItem('lastOrder'));
+    // Auth Check
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            currentUser = user;
+            loadOrderHistory();
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
 
-        if (!orderData) {
-            window.location.href = 'index.html';
+    function loadOrderHistory() {
+        const container = document.getElementById('orderHistoryContainer');
+        const badge = document.getElementById('orderBadge');
+
+        db.collection('orders').where('userId', '==', currentUser.uid)
+        .onSnapshot(querySnapshot => {
+            if (querySnapshot.empty) {
+                container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-receipt"></i><p>কোনো অর্ডার পাওয়া যায়নি।</p></div>`;
+                badge.style.display = 'none'; 
+                return;
+            }
+
+            let orders = [];
+            let pendingCount = 0; 
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                orders.push({ id: doc.id, ...data });
+                if(data.status === 'Pending') pendingCount++;
+            });
+
+            badge.style.display = pendingCount > 0 ? 'block' : 'none';
+            
+            // Sort by Date Descending
+            orders.sort((a, b) => {
+                 const dateA = a.date ? a.date.seconds : 0;
+                 const dateB = b.date ? b.date.seconds : 0;
+                 return dateB - dateA;
+            });
+
+            let historyHtml = '';
+            orders.forEach(order => {
+                const orderId = order.id;
+                const orderDate = order.date ? order.date.toDate() : new Date();
+                const isEditable = (new Date() - orderDate) < EDIT_WINDOW_MS && order.status === 'Pending';
+                
+                const quantityText = order.quantity ? ` x ${order.quantity}` : '';
+
+                let buttons = '';
+                if (order.status === 'Pending') {
+                    buttons = `<div class="action-buttons">
+                            ${isEditable ? `<button class="btn btn-secondary" onclick="editOrder('${orderId}')">এডিট</button>` : ''}
+                            <button class="btn btn-danger" onclick="cancelOrder('${orderId}')">মুছে ফেলুন</button>
+                        </div>`;
+                }
+
+                // UNIPIN/Voucher Code Logic
+                let adminMessageHtml = '';
+                if (order.adminNote || order.voucherCode) { 
+                    const code = order.adminNote || order.voucherCode;
+                     adminMessageHtml = `
+                    <div style="background: rgba(52, 199, 89, 0.1); padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid #34C759;">
+                        <p style="font-size: 13px; font-weight: 700; color: #34C759; margin-bottom: 5px;">Code / Note:</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-family: monospace; font-size: 14px; color: var(--primary-text-color); word-break: break-all;">${code}</span>
+                            <i class="fa-regular fa-copy copy-btn" onclick="copyToClipboard('${code}')"></i>
+                        </div>
+                    </div>`;
+                }
+
+                historyHtml += `<div class="topup-section">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                        <span>গেম: <strong>${order.game}</strong></span>
+                        <span class="status-badge status-${order.status}">${order.status}</span>
+                    </div>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্যাকেজ:</span><strong>${order.package}${quantityText}</strong></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্লেয়ার আইডি:</span><strong>${order.playerId}</strong></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>দাম:</span><strong>৳ ${parseFloat(order.price).toFixed(2)}</strong></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>TrxID:</span><strong>${order.transactionId || 'N/A'}</strong></p>
+                    <p style="display:flex; justify-content:space-between; font-size: 14px; color: var(--secondary-text-color);"><span>তারিখ:</span><strong>${orderDate.toLocaleString('bn-BD')}</strong></p>
+                    ${adminMessageHtml}
+                    ${buttons}
+                </div>`;
+            });
+             container.innerHTML = historyHtml;
+        }, error => {
+            console.error("Error loading order history: ", error);
+            // যদি লোড হতে কোনো সমস্যা হয়, তাহলে একটি এরর মেসেজ দেখান
+            container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-exclamation-triangle"></i><p>অর্ডার লোড করা যায়নি।</p></div>`;
+        });
+    }
+
+    async function cancelOrder(orderId) {
+        if (!confirm('আপনি কি নিশ্চিতভাবে এই অর্ডারটি মুছে ফেলতে চান? যদি ওয়ালেট দিয়ে পেমেন্ট করে থাকেন, তবে টাকা ফেরত দেওয়া হবে।')) {
             return;
         }
 
-        const summaryContainer = document.getElementById('orderSummary');
-        summaryContainer.innerHTML = `
-            <div class="summary-item"><span>গেম:</span><strong>${orderData.game}</strong></div>
-            <div class="summary-item"><span>প্যাকেজ:</span><strong>${orderData.package} (x${orderData.quantity || 1})</strong></div>
-            <div class="summary-item"><span>প্লেয়ার আইডি:</span><strong>${orderData.playerId}</strong></div>
-            <div class="summary-item"><span>পেমেন্ট:</span><strong>${orderData.paymentMethod}</strong></div>
-            <div class="summary-item"><span>মোট মূল্য:</span><strong>৳ ${parseFloat(orderData.price).toFixed(2)}</strong></div>
-            <div class="summary-item"><span>TrxID:</span><strong>${orderData.transactionId || 'Auto'}</strong></div>
-        `;
-        
-        // পরিবর্তন ২ শুরু: ডেটা লোড হওয়ার পর লোডার হাইড করে মূল কন্টেন্ট দেখানো
-        document.getElementById('skeleton-loader').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-        // পরিবর্তন ২ শেষ
-    };
+        try {
+            await db.runTransaction(async (transaction) => {
+                const orderRef = db.collection('orders').doc(orderId);
+                const orderDoc = await transaction.get(orderRef);
+
+                if (!orderDoc.exists) throw "অর্ডারটি পাওয়া যায়নি।";
+
+                const orderData = orderDoc.data();
+                if (orderData.status !== 'Pending') throw "এই অর্ডারটি এখন আর ক্যানসেল করা যাবে না।";
+
+                // Refund Logic if Wallet was used
+                if (orderData.transactionId === 'WALLET_PAY' || orderData.paymentMethod === 'Wallet' || orderData.paymentMethod === 'My Wallet') {
+                    const userRef = db.collection('users').doc(orderData.userId);
+                    const userDoc = await transaction.get(userRef);
+
+                    if (userDoc.exists) {
+                        const currentBalance = parseFloat(userDoc.data().walletBalance) || 0;
+                        const refundAmount = parseFloat(orderData.price);
+                        
+                        transaction.update(userRef, { 
+                            walletBalance: currentBalance + refundAmount 
+                        });
+                    }
+                }
+                
+                transaction.delete(orderRef);
+            });
+
+            alert('অর্ডারটি সফলভাবে বাতিল করা হয়েছে।');
+
+        } catch (error) {
+            alert('সমস্যা হয়েছে: ' + (error.message || error));
+        }
+    }
+
+    async function editOrder(orderId) {
+        try {
+            const doc = await db.collection('orders').doc(orderId).get();
+            if (!doc.exists) { alert('অর্ডার পাওয়া যায়নি!'); return; }
+            const order = doc.data();
+            
+            const newPlayerId = prompt('আপনার নতুন প্লেয়ার আইডি দিন:', order.playerId);
+            const newTransactionId = prompt('নতুন ট্রানজেকশন আইডি দিন:', order.transactionId);
+
+            const updates = {};
+            if (newPlayerId && newPlayerId.trim() !== '' && newPlayerId !== order.playerId) {
+                updates.playerId = newPlayerId;
+            }
+            if (newTransactionId && newTransactionId.trim() !== '' && newTransactionId !== order.transactionId) {
+                updates.transactionId = newTransactionId;
+            }
+            
+            if (Object.keys(updates).length > 0) {
+                await db.collection('orders').doc(orderId).update(updates);
+                alert('অর্ডার সফলভাবে আপডেট করা হয়েছে!');
+            }
+        } catch (e) { alert('আপডেট করতে সমস্যা হয়েছে: ' + e.message); }
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('কপি করা হয়েছে: ' + text);
+        }).catch(err => console.error('Copy failed', err));
+    }
 </script>
 </body>
 </html>
