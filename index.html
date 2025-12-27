@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Vercel Topup BD - Home</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 /* Roboto font for Footer */
@@ -450,6 +450,108 @@ body.dark-mode .footer-copyright .copyright-brand-highlight { color: #00e5ff; }
 /* Dark Mode Terms */
 body.dark-mode #termsContainer { border-bottom: 1px solid rgba(255,255,255,0.1); }
 body.dark-mode #termsTitle { color: #00e5ff !important; }
+
+/* =========================================
+   GIFT CARD STYLES (for 'Gift Card’s' category)
+   ========================================= */
+.gift-card-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+}
+.gift-card-content {
+    width: 100%;
+    min-height: 280px; /* উচ্চতা ঠিক রাখার জন্য */
+    background-color: var(--card-bg-color);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--soft-shadow);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-grow: 1;
+}
+.gc-top {
+    color: white;
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #4285F4, #EA4335, #FBBC05, #34A853);
+    background-size: 200% 200%;
+    text-align: center;
+}
+.gc-hanger {
+    width: 6rem;
+    height: 1.5rem;
+    background-color: var(--card-bg-color);
+    border-radius: 10px;
+    position: absolute;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.gc-hanger::before {
+    content: '';
+    width: 2.5rem;
+    height: 1.25rem;
+    background-color: var(--card-bg-color);
+    border-radius: 15px 15px 0 0;
+    position: absolute;
+    top: -0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.gc-title {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    font-weight: 700;
+    margin: 0;
+    margin-top: 2.5rem;
+    line-height: 1.2;
+}
+.gc-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+    margin-top: 0.25rem;
+    font-weight: 400;
+}
+.gc-bottom {
+    background-color: var(--card-bg-color);
+    height: 45%;
+    min-height: 110px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -20px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    padding: 10px;
+}
+.gc-play-logo-img {
+    max-width: 60%;
+    max-height: 50px;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+.gc-brand-name {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    color: var(--secondary-text-color);
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+    font-weight: 600;
+}
+
 
 /* --- Support Chat Button & Modal Styles (Added from user.html) --- */
 .support-fab {
@@ -903,15 +1005,39 @@ body.dark-mode .skeleton::before {
 
             sortedGames.forEach(game => {
                 const card = document.createElement('div');
-                card.className = 'game-card';
-                if (game.status === 'unavailable') card.classList.add('disabled');
-                
                 const badgeHtml = game.badgeText ? `<span class="card-badge">${game.badgeText}</span>` : '';
                 const unavailableOverlay = `<div class="unavailable-overlay"><img src="https://i.postimg.cc/66S03X9x/1000020217-removebg-preview.png"></div>`;
 
-                card.innerHTML = `${unavailableOverlay} ${badgeHtml}
-                                  <div class="icon-wrapper"><img src="${game.logo}" alt="${game.name}"></div>
-                                  <div class="game-info-container"><div class="game-name">${game.name}</div></div>`;
+                // --- NEW LOGIC START ---
+                if (category === "Gift Card’s") {
+                    card.className = 'game-card gift-card-container';
+                    if (game.status === 'unavailable') card.classList.add('disabled');
+
+                    card.innerHTML = `
+                        ${unavailableOverlay}
+                        ${badgeHtml}
+                        <div class="gift-card-content">
+                            <div class="gc-top">
+                                <div class="gc-hanger"></div>
+                                <h1 class="gc-title">${game.name}</h1>
+                                <p class="gc-subtitle">Redeem for apps, games & more</p>
+                            </div>
+                            <div class="gc-bottom">
+                                <img class="gc-play-logo-img" src="${game.logo}" alt="${game.name} Logo">
+                                <span class="gc-brand-name">${game.name}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // --- EXISTING LOGIC ---
+                    card.className = 'game-card';
+                    if (game.status === 'unavailable') card.classList.add('disabled');
+                    
+                    card.innerHTML = `${unavailableOverlay} ${badgeHtml}
+                                      <div class="icon-wrapper"><img src="${game.logo}" alt="${game.name}"></div>
+                                      <div class="game-info-container"><div class="game-name">${game.name}</div></div>`;
+                }
+                // --- NEW LOGIC END ---
                 
                 card.onclick = () => {
                     if (game.status !== 'unavailable') {
