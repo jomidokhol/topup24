@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -29,7 +28,6 @@
     --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     --nav-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
     --skeleton-bg: #e0e0e0;
 }
 body.dark-mode {
@@ -40,7 +38,6 @@ body.dark-mode {
     --light-purple: #2C2C2E;
     --soft-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     --nav-shadow: 0 -5px 20px rgba(255,255,255,0.05);
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
     --skeleton-bg: #333;
 }
 
@@ -48,9 +45,7 @@ body.dark-mode {
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    /* পরিবর্তন ১ শুরু: টাচ হাইলাইট বন্ধ করা */
     -webkit-tap-highlight-color: transparent;
-    /* পরিবর্তন ১ শেষ */
 }
 body {
     font-family: var(--font-family);
@@ -133,7 +128,7 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
     display: none; z-index: 5;
 }
 
-/* পরিবর্তন ২ শুরু: স্কেলিটাল লোডার CSS */
+/* Skeleton Loader CSS */
 .skeleton {
     background-color: var(--skeleton-bg);
     position: relative;
@@ -180,6 +175,37 @@ body.dark-mode .skeleton::before {
     width: 80px;
     border-radius: 20px;
 }
+
+/* পরিবর্তন ২ শুরু: Toast Notification CSS */
+.toast-notification {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(20, 20, 20, 0.9);
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--soft-shadow);
+    z-index: 9999;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+    transform: translate(-50%, 20px);
+}
+.toast-notification.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+.toast-notification.error {
+    background-color: var(--accent-red);
+}
+.toast-notification.success {
+     background-color: var(--accent-green);
+}
 /* পরিবর্তন ২ শেষ */
 
 </style>
@@ -193,7 +219,6 @@ body.dark-mode .skeleton::before {
     </header>
 
     <div id="orderHistoryContainer">
-        <!-- পরিবর্তন ২ শুরু: স্কেলিটাল লোডার HTML -->
         <div id="skeleton-loader">
             <div class="skeleton-card">
                 <div class="skeleton-header">
@@ -226,7 +251,6 @@ body.dark-mode .skeleton::before {
                 <div class="skeleton skeleton-line" style="width: 70%;"></div>
             </div>
         </div>
-        <!-- পরিবর্তন ২ শেষ -->
     </div>
 
     <!-- Bottom Nav -->
@@ -284,6 +308,34 @@ body.dark-mode .skeleton::before {
         }
     });
 
+    // পরিবর্তন ২ শুরু: Toast Notification ফাংশন
+    function showToast(message, type = 'success') {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) {
+            existingToast.remove();
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+        toast.textContent = message;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
+    }
+    // পরিবর্তন ২ শেষ
+
     function loadOrderHistory() {
         const container = document.getElementById('orderHistoryContainer');
         const badge = document.getElementById('orderBadge');
@@ -306,7 +358,6 @@ body.dark-mode .skeleton::before {
 
             badge.style.display = pendingCount > 0 ? 'block' : 'none';
             
-            // Sort by Date Descending
             orders.sort((a, b) => {
                  const dateA = a.date ? a.date.seconds : 0;
                  const dateB = b.date ? b.date.seconds : 0;
@@ -329,13 +380,14 @@ body.dark-mode .skeleton::before {
                         </div>`;
                 }
 
-                // UNIPIN/Voucher Code Logic
                 let adminMessageHtml = '';
                 if (order.adminNote || order.voucherCode) { 
                     const code = order.adminNote || order.voucherCode;
                      adminMessageHtml = `
                     <div style="background: rgba(52, 199, 89, 0.1); padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid #34C759;">
-                        <p style="font-size: 13px; font-weight: 700; color: #34C759; margin-bottom: 5px;">Code / Note:</p>
+                        <!-- পরিবর্তন ১ শুরু: Code/Note এর পরিবর্তে শুধু Code লেখা হয়েছে -->
+                        <p style="font-size: 13px; font-weight: 700; color: #34C759; margin-bottom: 5px;">Code:</p>
+                        <!-- পরিবর্তন ১ শেষ -->
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-family: monospace; font-size: 14px; color: var(--primary-text-color); word-break: break-all;">${code}</span>
                             <i class="fa-regular fa-copy copy-btn" onclick="copyToClipboard('${code}')"></i>
@@ -345,7 +397,7 @@ body.dark-mode .skeleton::before {
 
                 historyHtml += `<div class="topup-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                        <span>• <strong>${order.game}</strong></span>
+                        <span>গেম: <strong>${order.game}</strong></span>
                         <span class="status-badge status-${order.status}">${order.status}</span>
                     </div>
                     <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্যাকেজ:</span><strong>${order.package}${quantityText}</strong></p>
@@ -360,7 +412,6 @@ body.dark-mode .skeleton::before {
              container.innerHTML = historyHtml;
         }, error => {
             console.error("Error loading order history: ", error);
-            // যদি লোড হতে কোনো সমস্যা হয়, তাহলে একটি এরর মেসেজ দেখান
             container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-exclamation-triangle"></i><p>অর্ডার লোড করা যায়নি।</p></div>`;
         });
     }
@@ -380,7 +431,6 @@ body.dark-mode .skeleton::before {
                 const orderData = orderDoc.data();
                 if (orderData.status !== 'Pending') throw "এই অর্ডারটি এখন আর ক্যানসেল করা যাবে না।";
 
-                // Refund Logic if Wallet was used
                 if (orderData.transactionId === 'WALLET_PAY' || orderData.paymentMethod === 'Wallet' || orderData.paymentMethod === 'My Wallet') {
                     const userRef = db.collection('users').doc(orderData.userId);
                     const userDoc = await transaction.get(userRef);
@@ -397,18 +447,23 @@ body.dark-mode .skeleton::before {
                 
                 transaction.delete(orderRef);
             });
-
-            alert('অর্ডারটি সফলভাবে বাতিল করা হয়েছে।');
+            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
+            showToast('অর্ডারটি সফলভাবে বাতিল করা হয়েছে।', 'success');
 
         } catch (error) {
-            alert('সমস্যা হয়েছে: ' + (error.message || error));
+            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
+            showToast('সমস্যা হয়েছে: ' + (error.message || error), 'error');
         }
     }
 
     async function editOrder(orderId) {
         try {
             const doc = await db.collection('orders').doc(orderId).get();
-            if (!doc.exists) { alert('অর্ডার পাওয়া যায়নি!'); return; }
+            if (!doc.exists) { 
+                // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
+                showToast('অর্ডার পাওয়া যায়নি!', 'error'); 
+                return; 
+            }
             const order = doc.data();
             
             const newPlayerId = prompt('আপনার নতুন প্লেয়ার আইডি দিন:', order.playerId);
@@ -424,15 +479,23 @@ body.dark-mode .skeleton::before {
             
             if (Object.keys(updates).length > 0) {
                 await db.collection('orders').doc(orderId).update(updates);
-                alert('অর্ডার সফলভাবে আপডেট করা হয়েছে!');
+                // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
+                showToast('অর্ডার সফলভাবে আপডেট করা হয়েছে!', 'success');
             }
-        } catch (e) { alert('আপডেট করতে সমস্যা হয়েছে: ' + e.message); }
+        } catch (e) { 
+            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
+            showToast('আপডেট করতে সমস্যা হয়েছে: ' + e.message, 'error'); 
+        }
     }
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert('কপি করা হয়েছে: ' + text);
-        }).catch(err => console.error('Copy failed', err));
+            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
+            showToast('কপি করা হয়েছে: ' + text, 'success');
+        }).catch(err => {
+            console.error('Copy failed', err);
+            showToast('কপি করা সম্ভব হয়নি।', 'error');
+        });
     }
 </script>
 </body>
