@@ -78,7 +78,7 @@ body {
 .step-number { background: var(--primary-purple); color: white; border-radius: 50%; width: 26px; height: 26px; display: inline-flex; justify-content: center; align-items: center; font-weight: 700; margin-right: 12px; font-size: 13px; box-shadow: 0 4px 10px rgba(123, 97, 255, 0.4); }
 
 /* Inputs */
-.input-group { margin-bottom: 20px; position: relative; }
+.input-group { margin-bottom: 15px; position: relative; }
 .input-group input { 
     width: 100%; padding: 18px; 
     background-color: var(--background-color); 
@@ -90,27 +90,26 @@ body {
 .input-group input:focus { border-color: var(--primary-purple); background-color: var(--card-bg-color); outline: none; box-shadow: 0 0 0 4px rgba(123, 97, 255, 0.1); }
 .input-group label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 14px; color: var(--secondary-text-color); margin-left: 2px;}
 
-/* পরিবর্তন ২ এর জন্য CSS */
+/* "যাচাই করুন" বাটনের নতুন CSS */
 .input-group input.invalid {
     border-color: var(--accent-red);
     box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.1);
 }
 .verify-btn {
     display: block;
-    width: auto;
-    padding: 10px 20px;
-    font-size: 14px;
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
     font-weight: 600;
-    margin: -10px auto 10px;
     cursor: pointer;
     background-color: var(--light-purple);
     color: var(--primary-purple);
-    border: 1px solid var(--primary-purple);
+    border: none;
     border-radius: var(--border-radius-medium);
     transition: all 0.2s ease;
 }
 .verify-btn:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
 }
 
 
@@ -255,29 +254,43 @@ body.dark-mode .skeleton::before {
 .skeleton-payment-item { height: 110px; }
 .skeleton-btn { height: 58px; }
 
-/* পরিবর্তন ১ এর জন্য CSS */
+/* Toast Notification এর নতুন CSS */
 #toast-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 9999;
-    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;
 }
 .toast {
+    display: flex;
+    align-items: center;
     background-color: #333;
     color: #fff;
-    padding: 16px;
-    border-radius: 8px;
+    padding: 14px 20px;
+    border-radius: var(--border-radius-medium);
     margin-bottom: 10px;
     font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-weight: 500;
+    box-shadow: var(--soft-shadow);
     opacity: 0;
-    transform: translateX(100%);
-    transition: all 0.4s ease;
+    transform: translateY(30px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    max-width: 440px;
+}
+.toast i {
+    margin-right: 12px;
+    font-size: 18px;
 }
 .toast.show {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 .toast.success { background-color: var(--accent-green); }
 .toast.error { background-color: var(--accent-red); }
@@ -286,7 +299,7 @@ body.dark-mode .skeleton::before {
 </head>
 <body>
 
-<!-- পরিবর্তন ১ এর জন্য HTML -->
+<!-- Toast Notification এর জন্য HTML কন্টেইনার -->
 <div id="toast-container"></div>
 
 <div class="app-container">
@@ -337,7 +350,6 @@ body.dark-mode .skeleton::before {
             <div class="input-group">
                 <input type="text" id="playerId" placeholder="এখানে প্লেয়ার আইডি লিখুন">
             </div>
-            <!-- পরিবর্তন ২ এর জন্য HTML -->
             <button class="verify-btn" onclick="verifyInput()">যাচাই করুন</button>
         </div>
 
@@ -423,12 +435,19 @@ body.dark-mode .skeleton::before {
         currentUser = user;
     });
     
-    // পরিবর্তন ১: Toast Notification ফাংশন
+    // Toast Notification এর নতুন ফাংশন
     function showToast(message, type = 'error') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerText = message;
+        
+        let iconClass = 'fa-solid fa-circle-xmark'; // ডিফল্ট এরর আইকন
+        if (type === 'success') {
+            iconClass = 'fa-solid fa-circle-check';
+        }
+        
+        toast.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
+        
         container.appendChild(toast);
 
         setTimeout(() => toast.classList.add('show'), 100);
@@ -494,7 +513,7 @@ body.dark-mode .skeleton::before {
         loadPaymentMethods();
     }
 
-    // পরিবর্তন ২: ইনপুট ভেরিফাই করার ফাংশন
+    // ইনপুট ভেরিফাই করার ফাংশন
     function verifyInput() {
         const inputField = document.getElementById('playerId');
         const value = inputField.value.trim();
@@ -580,7 +599,7 @@ body.dark-mode .skeleton::before {
 
         const availableStock = parseInt(selectedPackage.stock);
         if (!isNaN(availableStock) && availableStock > 0 && newQuantity > availableStock) {
-            showToast(`দুঃখিত! স্টকে শুধুমাত্র ${availableStock} টি পণ্য আছে।`, 'error');
+            showToast(`দুঃখিত! স্টকে শুধুমাত্র ${availableStock} টি পণ্য আছে।`);
             return; 
         }
 
@@ -676,7 +695,6 @@ body.dark-mode .skeleton::before {
     async function processOrder() {
         if (!currentUser) { window.location.href = 'login.html'; return; }
 
-        // পরিবর্তন ২: স্বয়ংক্রিয় ভেরিফিকেশন
         if (!verifyInput()) return;
         
         const playerId = document.getElementById('playerId').value;
@@ -790,7 +808,7 @@ body.dark-mode .skeleton::before {
     }
 
     function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => showToast('কপি করা হয়েছে: ' + text, 'success'));
+        navigator.clipboard.writeText(text).then(() => showToast('নম্বরটি কপি করা হয়েছে!', 'success'));
     }
 </script>
 </body>
