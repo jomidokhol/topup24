@@ -301,14 +301,160 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
 }
 .nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
 
-/* Popup */
-.modal { display: none; position: fixed; z-index: 1002; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
-.modal-content { background-color: var(--card-bg-color); padding: 25px; border-radius: var(--border-radius-large); width: 90%; max-width: 400px; box-shadow: var(--soft-shadow); text-align: center; }
-.modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-body.dark-mode .modal-header { border-color: rgba(255,255,255,0.05); }
-.close-btn { color: #8E8E93; font-size: 28px; font-weight: bold; cursor: pointer; }
-#popupImage { width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--border-radius-medium); margin-top: 15px; display: none; }
-.popup-btn { display: inline-block; margin-top: 15px; padding: 10px 20px; background-color: var(--primary-purple); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; }
+/* --- নতুন পপ-আপ CSS শুরু --- */
+.modal { 
+    display: none; 
+    position: fixed; 
+    z-index: 1002; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden; 
+    background-color: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(5px); 
+    justify-content: center; 
+    align-items: center; 
+}
+
+.popup-container {
+    max-width: 500px;
+    width: 90%;
+    border: 4px solid #8e44ad;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    padding: 20px;
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%),
+        url(''); 
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.popup-title {
+    background-color: #8e44ad;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 10px;
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    white-space: nowrap;
+}
+
+.popup-content {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+.popup-message-text {
+    color: #ffffff;
+    font-size: 16px;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+@media (prefers-color-scheme: light) {
+    .popup-content {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+    .popup-message-text {
+        color: #333333;
+        text-shadow: none;
+    }
+}
+
+.click-here-btn {
+    background-color: #9b59b6;
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s;
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.click-here-btn:hover {
+    background-color: #8e44ad;
+}
+
+.close-btn-container {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.close-btn {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.3s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.close-btn:hover {
+    background-color: #16a085;
+}
+
+.close-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    margin-right: 8px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.close-icon::before,
+.close-icon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 3px;
+    background-color: red;
+    transform-origin: center;
+    border-radius: 2px;
+}
+
+.close-icon::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-icon::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+/* --- নতুন পপ-আপ CSS শেষ --- */
 
 /* =========================================
    NEW FOOTER STYLES (Light & Dark Mode)
@@ -573,27 +719,6 @@ body.dark-mode #termsTitle { color: #00e5ff !important; }
 }
 .support-fab:active { transform: scale(0.9); }
 
-/* পরিবর্তন ১ শুরু: সাপোর্ট চ্যাট নোটিফিকেশন ডট */
-.notification-dot {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 14px;
-    height: 14px;
-    background-color: var(--accent-red);
-    border-radius: 50%;
-    border: 2px solid var(--card-bg-color);
-    box-shadow: 0 0 0 2px var(--accent-red);
-    animation: pulse-dot 1.5s infinite;
-}
-@keyframes pulse-dot {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-/* পরিবর্তন ১ শেষ */
-
-
 .chat-popover {
     position: absolute;
     right: 70px;
@@ -616,27 +741,6 @@ body.dark-mode #termsTitle { color: #00e5ff !important; }
     border-color: transparent transparent transparent var(--card-bg-color);
 }
 .chat-popover.show { opacity: 1; visibility: visible; right: 75px;  }
-
-/* পরিবর্তন ৩ শুরু: সাপোর্ট মডাল এনিমেশন */
-#supportModal {
-    background-color: rgba(0,0,0,0);
-    backdrop-filter: blur(0px);
-    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
-}
-#supportModal.show {
-    background-color: rgba(0,0,0,0.6);
-    backdrop-filter: blur(5px);
-}
-#supportModal .modal-content {
-    transform: scale(0.95) translateY(20px);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-#supportModal.show .modal-content {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-}
-/* পরিবর্তন ৩ শেষ */
 
 /* Support Modal Specifics */
 #supportModal .modal-content { display: flex; flex-direction: column; height: 75vh; }
@@ -714,64 +818,6 @@ body.dark-mode .skeleton::before {
 }
 .skeleton-game-image { height: 160px; }
 .skeleton-game-title { height: 48px; }
-/* পরিবর্তন ২ শেষ */
-
-
-/* পরিবর্তন ২ শুরু: টোস্ট নোটিফিকেশন CSS */
-#toast-container {
-    position: fixed;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 90%;
-    max-width: 450px;
-}
-
-.toast {
-    background-color: var(--card-bg-color);
-    color: var(--primary-text-color);
-    padding: 12px 20px;
-    border-radius: 12px;
-    box-shadow: var(--soft-shadow);
-    font-size: 14px;
-    font-weight: 600;
-    width: 100%;
-    text-align: center;
-    border-left: 5px solid var(--primary-purple);
-    animation: slide-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards, 
-                 slide-out 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) 2.6s forwards;
-    opacity: 0;
-}
-
-.toast.error { border-left-color: var(--accent-red); }
-.toast.success { border-left-color: var(--accent-green); }
-
-@keyframes slide-in {
-    from {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slide-out {
-    from {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-}
 /* পরিবর্তন ২ শেষ */
 
 </style>
@@ -935,25 +981,26 @@ body.dark-mode .skeleton::before {
     <div class="support-fab" id="supportBtn">
         <i class="fa-solid fa-headset"></i>
         <span class="chat-popover">কোন সমস্যা ?</span>
-        <!-- পরিবর্তন ১ শুরু: নোটিফিকেশন ডট-এর জন্য HTML এলিমেন্ট -->
-        <span class="notification-dot" style="display: none;"></span>
-        <!-- পরিবর্তন ১ শেষ -->
     </div>
 
 </div>
 
 <!-- Dynamic Popup -->
 <div id="dynamicPopup" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="popupTitle"></h2>
-            <span class="close-btn" id="popupCloseBtn">&times;</span>
+    <div id="newPopupContainer" class="popup-container">
+        <div id="popupTitle" class="popup-title"></div>
+        <div class="popup-content">
+            <p id="popupMessage" class="popup-message-text"></p>
+            <a id="popupActionButton" href="#" target="_blank" class="click-here-btn" style="display: none;"></a>
         </div>
-        <img id="popupImage" src="" alt="Popup Image">
-        <p id="popupMessage" style="margin-top:20px; color:var(--secondary-text-color);"></p>
-        <a id="popupActionButton" class="popup-btn" style="display: none;" href="#" target="_blank">Tap Here</a>
+        <div class="close-btn-container">
+            <button id="popupCloseBtn" class="close-btn">
+                <span class="close-icon"></span>CLOSE
+            </button>
+        </div>
     </div>
 </div>
+
 
 <!-- Support Modal -->
 <div id="supportModal" class="modal">
@@ -969,11 +1016,6 @@ body.dark-mode .skeleton::before {
         </div>
     </div>
 </div>
-
-<!-- পরিবর্তন ২ শুরু: টোস্ট নোটিফিকেশন কন্টেইনার -->
-<div id="toast-container"></div>
-<!-- পরিবর্তন ২ শেষ -->
-
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -996,7 +1038,6 @@ body.dark-mode .skeleton::before {
 
     let currentUser = null;
     let eventTimerInterval = null;
-    let unreadSupportMessages = false; // পরিবর্তন ১
 
     // Slider Variables
     const slider = document.querySelector('.slider');
@@ -1009,21 +1050,6 @@ body.dark-mode .skeleton::before {
     if (localStorage.getItem('theme') === 'dark-mode') {
         document.body.classList.add('dark-mode');
     }
-    
-    // পরিবর্তন ২ শুরু: টোস্ট নোটিফিকেশন ফাংশন
-    function showToast(message, type = 'info') {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerText = message;
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            toast.remove();
-        }, 3000); // 3 সেকেন্ড পর টোস্ট自动ভাবে মুছে যাবে
-    }
-    // পরিবর্তন ২ শেষ
-
 
     // --- AUTH OBSERVER ---
     auth.onAuthStateChanged(user => {
@@ -1036,9 +1062,6 @@ body.dark-mode .skeleton::before {
             if (user.photoURL) {
                 document.getElementById('headerProfileAvatar').src = user.photoURL;
             }
-            
-            // পরিবর্তন ১: ব্যবহারকারী লগইন করলে সাপোর্ট নোটিফিকেশন শোনা শুরু করুন
-            listenForSupportNotifications();
 
             db.collection('users').doc(user.uid).onSnapshot(doc => {
                 if (doc.exists) {
@@ -1056,15 +1079,11 @@ body.dark-mode .skeleton::before {
         }
     });
 
-    // পরিবর্তন ২: checkAuthAndGo ফাংশন আপডেট করা হয়েছে
     function checkAuthAndGo(page) {
         if (currentUser) {
             window.location.href = page;
         } else {
-            showToast('অনুগ্রহ করে প্রথমে লগইন করুন।', 'error');
-            setTimeout(() => {
-                 window.location.href = 'login.html';
-            }, 1500);
+            window.location.href = 'login.html';
         }
     }
 
@@ -1280,7 +1299,7 @@ body.dark-mode .skeleton::before {
                             currentSlide = totalSlidesWithClones - 2;
                             slider.style.transition = 'none';
                             updateSliderPosition();
-                            setTimeout(() => { slider.style.transition = 'transform 0.s ease-in-out'; });
+                            setTimeout(() => { slider.style.transition = 'transform 0.5s ease-in-out'; });
                         }
                     });
                     currentSlide = 1; 
@@ -1338,23 +1357,44 @@ body.dark-mode .skeleton::before {
             }
         });
     }
+    
+    // --- নতুন পপ-আপ ফাংশন শুরু ---
+    function adjustPopupAspectRatio(imageUrl) {
+        const popupContainer = document.getElementById('newPopupContainer');
+        if (imageUrl && popupContainer) {
+            const img = new Image();
+            img.src = imageUrl;
+            img.onload = function() {
+                const aspectRatio = this.naturalWidth / this.naturalHeight;
+                popupContainer.style.aspectRatio = aspectRatio;
+            };
+        }
+    }
 
     function initPopup() {
         db.collection('settings').doc('popup').onSnapshot(doc => {
             if (doc.exists && doc.data().isActive && !sessionStorage.getItem('popupViewed')) {
                 const data = doc.data();
+                const popupContainer = document.getElementById('newPopupContainer');
+                
                 document.getElementById('popupTitle').textContent = data.title || '';
                 document.getElementById('popupMessage').textContent = data.message || '';
+                
                 if(data.imageUrl) {
-                    document.getElementById('popupImage').src = data.imageUrl;
-                    document.getElementById('popupImage').style.display = 'block';
+                    const gradient = 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%)';
+                    popupContainer.style.backgroundImage = `${gradient}, url('${data.imageUrl}')`;
+                    adjustPopupAspectRatio(data.imageUrl);
                 }
+
                 const btn = document.getElementById('popupActionButton');
                 if(data.buttonLink) {
                     btn.href = data.buttonLink;
-                    btn.innerText = data.buttonText || 'Tap Here';
+                    btn.textContent = data.buttonText || 'CLICK HERE!';
                     btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
                 }
+                
                 document.getElementById('dynamicPopup').style.display = 'flex';
             }
         });
@@ -1363,6 +1403,8 @@ body.dark-mode .skeleton::before {
             sessionStorage.setItem('popupViewed', 'true');
         };
     }
+    // --- নতুন পপ-আপ ফাংশন শেষ ---
+
 
     // FIXED: initEvent function to show title
     function initEvent() {
@@ -1490,7 +1532,7 @@ body.dark-mode .skeleton::before {
     // Chat Popover Logic
     setInterval(() => {
         const popover = document.querySelector('.chat-popover');
-        if(popover && !unreadSupportMessages) { // শুধুমাত্র নতুন মেসেজ না থাকলেই ডিফল্ট টেক্সট দেখাবে
+        if(popover) {
             popover.classList.add('show');
             setTimeout(() => {
                 popover.classList.remove('show');
@@ -1498,64 +1540,14 @@ body.dark-mode .skeleton::before {
         }
     }, 15000); 
 
-    // পরিবর্তন ১ শুরু: সাপোর্ট চ্যাট নোটিফিকেশন লজিক
-    let notificationUnsubscribe = null;
-    function listenForSupportNotifications() {
-        if (notificationUnsubscribe) notificationUnsubscribe(); // পুরনো লিসেনার বন্ধ করুন
-        if (!currentUser) return;
-
-        notificationUnsubscribe = db.collection('supportMessages')
-            .where('userId', '==', currentUser.uid)
-            .where('sender', '==', 'admin')
-            .where('readByUser', '==', false)
-            .onSnapshot(snapshot => {
-                const notificationDot = document.querySelector('.notification-dot');
-                const popover = document.querySelector('.chat-popover');
-                
-                if (!snapshot.empty) {
-                    unreadSupportMessages = true;
-                    notificationDot.style.display = 'block';
-                    popover.innerText = 'সাপোর্ট থেকে নতুন মেসেজ!';
-                    popover.classList.add('show');
-                } else {
-                    unreadSupportMessages = false;
-                    notificationDot.style.display = 'none';
-                    popover.innerText = 'কোন সমস্যা ?';
-                    popover.classList.remove('show');
-                }
-            });
-    }
-
-    async function markAdminMessagesAsRead() {
-        if (!currentUser) return;
-        const unreadMessages = await db.collection('supportMessages')
-            .where('userId', '==', currentUser.uid)
-            .where('sender', '==', 'admin')
-            .where('readByUser', '==', false)
-            .get();
-
-        const batch = db.batch();
-        unreadMessages.forEach(doc => {
-            batch.update(doc.ref, { readByUser: true });
-        });
-        await batch.commit();
-    }
-    // পরিবর্তন ১ শেষ
-
-
     supportBtn.onclick = () => {
+        // Auth check for chat
         if (!currentUser) {
-            checkAuthAndGo('support.html'); // This will show toast and redirect
+            window.location.href = 'login.html';
             return;
         }
-        
-        // পরিবর্তন ১: মেসেজ পড়া হয়েছে হিসেবে মার্ক করুন
-        markAdminMessagesAsRead();
 
-        // পরিবর্তন ৩: মডাল ওপেনিং এনিমেশন
         supportModal.style.display = "flex";
-        setTimeout(() => supportModal.classList.add('show'), 10);
-
         if (unsubscribeSupportChat) unsubscribeSupportChat(); 
 
         unsubscribeSupportChat = db.collection('supportMessages')
@@ -1588,23 +1580,13 @@ body.dark-mode .skeleton::before {
             });
     };
 
-    // পরিবর্তন ৩: মডাল ক্লোজিং এনিমেশন
     supportCloseBtn.onclick = () => {
-        supportModal.classList.remove('show');
-        
-        // এনিমেশন শেষ হওয়ার পর display: none করুন
-        const handleTransitionEnd = () => {
-            supportModal.style.display = "none";
-            supportModal.removeEventListener('transitionend', handleTransitionEnd);
-        };
-        supportModal.addEventListener('transitionend', handleTransitionEnd);
-
+        supportModal.style.display = "none";
         if (unsubscribeSupportChat) {
             unsubscribeSupportChat();
             unsubscribeSupportChat = null;
         }
     };
-
 
     sendMessageBtn.onclick = async () => {
         const message = supportMessageInput.value.trim();
@@ -1616,9 +1598,7 @@ body.dark-mode .skeleton::before {
             userName: currentUser.displayName || currentUser.email,
             message: message,
             sender: 'user',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            readByAdmin: false, // অ্যাডমিনের জন্য
-            readByUser: true, // ব্যবহারকারী নিজের মেসেজকে পড়া হিসেবে ধরবে
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
     };
 
