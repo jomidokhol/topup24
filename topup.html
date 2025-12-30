@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -70,37 +71,11 @@ body {
 .page-header { 
     display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px;
 }
-/* Back Button নতুন CSS */
-.back-btn { 
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 3;
-    font-size: 20px; cursor: pointer; color: #ffffff; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 50%; box-shadow: var(--soft-shadow); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-}
+.back-btn { font-size: 20px; cursor: pointer; margin-right: 15px; color: var(--primary-text-color); background: var(--card-bg-color); padding: 10px; border-radius: 50%; box-shadow: var(--soft-shadow); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;}
 .page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
 
-/* Banner Container নতুন CSS */
-.banner-container {
-    position: relative;
-    margin-bottom: 25px;
-}
-.banner-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px; /* Shadow height */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent);
-    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
-    z-index: 2;
-    pointer-events: none;
-}
-
-
-/* Game Banner পরিবর্তিত CSS */
-.game-banner { width: 100%; height: 160px; object-fit: cover; border-radius: var(--border-radius-large); box-shadow: var(--soft-shadow); }
+/* Game Banner */
+.game-banner { width: 100%; height: 160px; object-fit: cover; border-radius: var(--border-radius-large); margin-bottom: 25px; box-shadow: var(--soft-shadow); }
 
 /* Sections */
 .topup-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); }
@@ -218,7 +193,7 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
 }
 .nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
 
-/* পরিবর্তন ২ শুরু: স্কেলিটাল লোডার CSS */
+/* স্কেলিটাল লোডার CSS */
 .skeleton {
     background-color: var(--skeleton-bg);
     position: relative;
@@ -260,7 +235,6 @@ body.dark-mode .skeleton::before {
 .skeleton-grid-item { height: 75px; }
 .skeleton-payment-item { height: 110px; }
 .skeleton-btn { height: 58px; }
-/* পরিবর্তন ২ শেষ */
 
 </style>
 </head>
@@ -268,7 +242,7 @@ body.dark-mode .skeleton::before {
 
 <div class="app-container">
 
-    <!-- পরিবর্তন ২ শুরু: স্কেলিটাল লোডার HTML -->
+    <!-- স্কেলিটাল লোডার HTML -->
     <div id="skeleton-loader">
         <div class="skeleton-header">
             <div class="skeleton skeleton-back-btn"></div>
@@ -298,19 +272,15 @@ body.dark-mode .skeleton::before {
         </div>
         <div class="skeleton skeleton-btn"></div>
     </div>
-    <!-- পরিবর্তন ২ শেষ -->
     
-    <!-- পরিবর্তন ২ শুরু: মূল কন্টেন্ট এখন হাইড থাকবে -->
+    <!-- মূল কন্টেন্ট এখন হাইড থাকবে -->
     <div id="main-content" style="display: none;">
         <header class="page-header">
+            <i class="fa-solid fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
             <h2 id="gameTitle">Top Up</h2>
         </header>
 
-        <!-- ব্যানার এবং ব্যাক বাটনের জন্য নতুন কন্টেইনার -->
-        <div class="banner-container">
-            <i class="fa-solid fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
-            <img id="gameBanner" src="" alt="Game Banner" class="game-banner">
-        </div>
+        <img id="gameBanner" src="" alt="Game Banner" class="game-banner">
 
         <!-- Step 1: Input -->
         <div class="topup-section">
@@ -345,7 +315,6 @@ body.dark-mode .skeleton::before {
 
         <button class="btn" onclick="processOrder()">Buy</button>
     </div>
-    <!-- পরিবর্তন ২ শেষ -->
 
     <!-- Bottom Nav -->
     <nav class="bottom-nav">
@@ -513,7 +482,6 @@ body.dark-mode .skeleton::before {
             populatePaymentGrid();
         } catch (error) { 
             console.error(error);
-            // যদি লোড হতে কোনো সমস্যা হয়, তবুও লোডার হাইড করে দিন
             document.getElementById('skeleton-loader').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
         }
@@ -535,10 +503,8 @@ body.dark-mode .skeleton::before {
             grid.appendChild(div);
         });
 
-        // পরিবর্তন ২ শুরু: ডেটা লোড হওয়ার পর লোডার হাইড করে মূল কন্টেন্ট দেখানো
         document.getElementById('skeleton-loader').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
-        // পরিবর্তন ২ শেষ
     }
 
     function selectPayment(element, type, methodData = null) {
@@ -626,6 +592,15 @@ body.dark-mode .skeleton::before {
         btn.disabled = true;
         btn.innerText = "প্রসেস হচ্ছে...";
 
+        // পরিবর্তন ২: ইনপুট টাইপ লেবেল সংরক্ষণ
+        const inputType = selectedGameData.inputType || 'userid';
+        let inputTypeLabel = 'প্লেয়ার আইডি';
+        if (inputType === 'email') {
+            inputTypeLabel = 'ইমেইল';
+        } else if (inputType === 'mobile_number') {
+            inputTypeLabel = 'মোবাইল নম্বর';
+        }
+
         let orderData = {
             userId: currentUser.uid,
             game: selectedGameData.name,
@@ -633,6 +608,7 @@ body.dark-mode .skeleton::before {
             quantity: currentQuantity,
             price: totalPrice,
             playerId: playerId,
+            inputTypeLabel: inputTypeLabel, // লেবেল এখানে যুক্ত করা হলো
             paymentMethod: selectedPayment.name,
             status: 'Pending',
             date: firebase.firestore.FieldValue.serverTimestamp()
