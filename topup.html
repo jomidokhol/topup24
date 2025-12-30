@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -29,7 +28,6 @@
     --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     --nav-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
     --skeleton-bg: #e0e0e0;
 }
 body.dark-mode {
@@ -40,7 +38,6 @@ body.dark-mode {
     --light-purple: #2C2C2E;
     --soft-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     --nav-shadow: 0 -5px 20px rgba(255,255,255,0.05);
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
     --skeleton-bg: #333;
 }
 
@@ -48,9 +45,7 @@ body.dark-mode {
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    /* পরিবর্তন ১ শুরু: টাচ হাইলাইট বন্ধ করা */
     -webkit-tap-highlight-color: transparent;
-    /* পরিবর্তন ১ শেষ */
 }
 body {
     font-family: var(--font-family);
@@ -94,6 +89,37 @@ body {
 }
 .input-group input:focus { border-color: var(--primary-purple); background-color: var(--card-bg-color); outline: none; box-shadow: 0 0 0 4px rgba(123, 97, 255, 0.1); }
 .input-group label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 14px; color: var(--secondary-text-color); margin-left: 2px;}
+
+/* পরিবর্তন ২ শুরু: ইনপুট ভ্যালিডেশন এর জন্য CSS */
+.input-group input.input-error {
+    border-color: var(--accent-red) !important;
+    box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.1);
+}
+.input-group input.input-success {
+    border-color: var(--accent-green) !important;
+    box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.1);
+}
+.verify-btn {
+    display: block;
+    width: 120px;
+    margin-top: 15px;
+    margin-left: auto;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--primary-purple);
+    background-color: var(--light-purple);
+    border: none;
+    border-radius: var(--border-radius-medium);
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.verify-btn:active {
+    transform: scale(0.97);
+}
+/* পরিবর্তন ২ শেষ */
+
 
 /* Package Grid (Product List) */
 .package-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
@@ -193,42 +219,16 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
 }
 .nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
 
-/* স্কেলিটাল লোডার CSS */
-.skeleton {
-    background-color: var(--skeleton-bg);
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--border-radius-medium);
-}
-.skeleton::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -150%;
-    height: 100%;
-    width: 150%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    animation: skeleton-wave 1.5s infinite;
-}
-body.dark-mode .skeleton::before {
-     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-}
-@keyframes skeleton-wave {
-    0% { left: -150%; }
-    100% { left: 150%; }
-}
-
+/* Skeleton Loader */
+.skeleton { background-color: var(--skeleton-bg); position: relative; overflow: hidden; border-radius: var(--border-radius-medium); }
+.skeleton::before { content: ''; position: absolute; top: 0; left: -150%; height: 100%; width: 150%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); animation: skeleton-wave 1.5s infinite; }
+body.dark-mode .skeleton::before { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent); }
+@keyframes skeleton-wave { 0% { left: -150%; } 100% { left: 150%; } }
 .skeleton-header { display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px; }
 .skeleton-back-btn { width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; }
 .skeleton-title { height: 26px; width: 150px; }
 .skeleton-banner { height: 160px; border-radius: var(--border-radius-large); margin-bottom: 25px; }
-.skeleton-section {
-    background-color: var(--card-bg-color);
-    border-radius: var(--border-radius-large);
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: var(--soft-shadow);
-}
+.skeleton-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); }
 .skeleton-section-title { height: 24px; width: 200px; margin-bottom: 20px; }
 .skeleton-input { height: 58px; }
 .skeleton-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
@@ -236,20 +236,63 @@ body.dark-mode .skeleton::before {
 .skeleton-payment-item { height: 110px; }
 .skeleton-btn { height: 58px; }
 
+/* পরিবর্তন ১ শুরু: Toast Notification CSS */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: 300px;
+}
+.toast {
+    background-color: var(--card-bg-color);
+    color: var(--primary-text-color);
+    padding: 15px 20px;
+    border-radius: var(--border-radius-medium);
+    margin-bottom: 10px;
+    box-shadow: var(--soft-shadow);
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+.toast i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+.toast.error {
+    border-left: 5px solid var(--accent-red);
+}
+.toast.error i {
+    color: var(--accent-red);
+}
+.toast.success {
+    border-left: 5px solid var(--accent-green);
+}
+.toast.success i {
+    color: var(--accent-green);
+}
+/* পরিবর্তন ১ শেষ */
 </style>
 </head>
 <body>
 
-<div class="app-container">
+<!-- পরিবর্তন ১ শুরু: Toast container HTML -->
+<div id="toast-container"></div>
+<!-- পরিবর্তন ১ শেষ -->
 
-    <!-- স্কেলিটাল লোডার HTML -->
+<div class="app-container">
     <div id="skeleton-loader">
         <div class="skeleton-header">
             <div class="skeleton skeleton-back-btn"></div>
             <div class="skeleton skeleton-title"></div>
         </div>
         <div class="skeleton skeleton-banner"></div>
-
         <div class="skeleton-section">
             <div class="skeleton skeleton-section-title"></div>
             <div class="skeleton skeleton-input"></div>
@@ -273,7 +316,6 @@ body.dark-mode .skeleton::before {
         <div class="skeleton skeleton-btn"></div>
     </div>
     
-    <!-- মূল কন্টেন্ট এখন হাইড থাকবে -->
     <div id="main-content" style="display: none;">
         <header class="page-header">
             <i class="fa-solid fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
@@ -287,6 +329,9 @@ body.dark-mode .skeleton::before {
             <h3 class="title" id="inputStepTitle"><span class="step-number">1</span>আপনার প্লেয়ার আইডি দিন</h3>
             <div class="input-group">
                 <input type="text" id="playerId" placeholder="এখানে প্লেয়ার আইডি লিখুন">
+                <!-- পরিবর্তন ২ শুরু: "যাচাই করুন" বাটন যোগ -->
+                <button class="verify-btn" onclick="verifyPlayerId()">যাচাই করুন</button>
+                <!-- পরিবর্তন ২ শেষ -->
             </div>
         </div>
 
@@ -360,20 +405,109 @@ body.dark-mode .skeleton::before {
     if (localStorage.getItem('theme') === 'dark-mode') {
         document.body.classList.add('dark-mode');
     }
-
+    
     // Init Page
     if (!selectedGameData) {
         window.location.href = 'index.html';
     } else {
+        // পরিবর্তন ২: প্লেয়ার আইডি ইনপুটে ইভেন্ট লিসেনার যুক্ত করা
+        document.getElementById('playerId').addEventListener('input', () => {
+            const inputField = document.getElementById('playerId');
+            inputField.classList.remove('input-error', 'input-success');
+        });
         loadPageData();
     }
-
+    
     auth.onAuthStateChanged(user => {
         currentUser = user;
     });
 
+    // পরিবর্তন ১ শুরু: Toast Notification Function
+    function showToast(message, type = 'error') {
+        const toastContainer = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const iconClass = type === 'success' ? 'fa-solid fa-check-circle' : 'fa-solid fa-times-circle';
+        toast.innerHTML = `<i class="${iconClass}"></i> ${message}`;
+        
+        toastContainer.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
+        }, 3000);
+    }
+    // পরিবর্তন ১ শেষ
+
+    // পরিবর্তন ২ শুরু: Player ID যাচাই করার ফাংশন
+    function verifyPlayerId() {
+        const inputField = document.getElementById('playerId');
+        const value = inputField.value.trim();
+        const inputType = selectedGameData.inputType || 'userid';
+        
+        inputField.classList.remove('input-error', 'input-success');
+
+        if (!value) {
+            showToast('দয়া করে আপনার তথ্য দিন।');
+            inputField.classList.add('input-error');
+            return false;
+        }
+
+        let isValid = false;
+        let errorMessage = '';
+
+        switch(inputType) {
+            case 'mobile_number':
+                // চেক: কোনো স্পেস, অক্ষর নেই এবং ঠিক ১১টি সংখ্যা আছে কিনা
+                if (!/^\d{11}$/.test(value)) {
+                    errorMessage = 'সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।';
+                } else {
+                    isValid = true;
+                }
+                break;
+            
+            case 'email':
+                // চেক: '@', '.com' আছে কিনা এবং ছোট হাতের অক্ষর/সংখ্যা
+                const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.com$/;
+                if (!emailRegex.test(value)) {
+                    errorMessage = 'সঠিক ইমেইল অ্যাড্রেস দিন।';
+                } else {
+                    isValid = true;
+                }
+                break;
+
+            case 'userid':
+            default:
+                // চেক: কোনো স্পেস বা অক্ষর নেই, শুধু সংখ্যা
+                if (/\s/.test(value) || /[a-zA-Z]/.test(value)) {
+                    errorMessage = 'প্লেয়ার আইডিতে শুধু সংখ্যা ব্যবহার করুন।';
+                } else {
+                    isValid = true;
+                }
+                break;
+        }
+
+        if (isValid) {
+            showToast('যাচাই সম্পন্ন হয়েছে।', 'success');
+            inputField.classList.add('input-success');
+            return true;
+        } else {
+            showToast(errorMessage);
+            inputField.classList.add('input-error');
+            return false;
+        }
+    }
+    // পরিবর্তন ২ শেষ
+
     function loadPageData() {
-        // Set Game Info
+        // ... (বাকি কোড অপরিবর্তিত)
         document.getElementById('gameTitle').innerText = selectedGameData.name;
         document.getElementById('gameBanner').src = selectedGameData.banner;
         
@@ -423,12 +557,15 @@ body.dark-mode .skeleton::before {
                 packageGrid.appendChild(item);
             });
         }
-
         loadPaymentMethods();
     }
 
     function selectPackage(element, pkg) {
-        if (!currentUser) { alert('দয়া করে লগইন করুন।'); window.location.href = 'login.html'; return; }
+        if (!currentUser) { 
+            showToast('দয়া করে লগইন করুন।'); 
+            window.location.href = 'login.html'; 
+            return; 
+        }
         
         document.querySelectorAll('.package-item.selected').forEach(el => el.classList.remove('selected'));
         element.classList.add('selected');
@@ -460,7 +597,7 @@ body.dark-mode .skeleton::before {
 
         const availableStock = parseInt(selectedPackage.stock);
         if (!isNaN(availableStock) && availableStock > 0 && newQuantity > availableStock) {
-            alert(`দুঃখিত! স্টকে শুধুমাত্র ${availableStock} টি পণ্য আছে।`);
+            showToast(`দুঃখিত! স্টকে শুধুমাত্র ${availableStock} টি পণ্য আছে।`);
             return; 
         }
 
@@ -470,6 +607,7 @@ body.dark-mode .skeleton::before {
     }
 
     function updateTotalPrice() {
+        if (!selectedPackage) return;
         const total = (parseFloat(selectedPackage.price) * currentQuantity).toFixed(2);
         const priceDisplays = document.querySelectorAll('#displayPackagePrice');
         priceDisplays.forEach(el => el.innerText = `৳ ${total}`);
@@ -508,7 +646,11 @@ body.dark-mode .skeleton::before {
     }
 
     function selectPayment(element, type, methodData = null) {
-        if (!currentUser) { alert('দয়া করে লগইন করুন।'); window.location.href = 'login.html'; return; }
+        if (!currentUser) { 
+            showToast('দয়া করে লগইন করুন।'); 
+            window.location.href = 'login.html'; 
+            return; 
+        }
         
         document.querySelectorAll('.payment-item.selected').forEach(el => el.classList.remove('selected'));
         element.classList.add('selected');
@@ -556,10 +698,15 @@ body.dark-mode .skeleton::before {
     async function processOrder() {
         if (!currentUser) { window.location.href = 'login.html'; return; }
 
+        // পরিবর্তন ২: Buy বাটনে চাপ দিলে অটো যাচাই হবে
+        if (!verifyPlayerId()) {
+            showToast('আপনার দেওয়া তথ্য সঠিক নয়।');
+            return;
+        }
+
         const playerId = document.getElementById('playerId').value;
-        if (!playerId) { alert('দয়া করে আইডি/ইমেইল দিন।'); return; }
-        if (!selectedPackage) { alert('দয়া করে একটি প্যাকেজ সিলেক্ট করুন।'); return; }
-        if (!selectedPayment) { alert('দয়া করে পেমেন্ট মেথড সিলেক্ট করুন।'); return; }
+        if (!selectedPackage) { showToast('দয়া করে একটি প্যাকেজ সিলেক্ট করুন।'); return; }
+        if (!selectedPayment) { showToast('দয়া করে পেমেন্ট মেথড সিলেক্ট করুন।'); return; }
 
         const totalPrice = parseFloat(selectedPackage.price) * currentQuantity;
 
@@ -592,15 +739,6 @@ body.dark-mode .skeleton::before {
         btn.disabled = true;
         btn.innerText = "প্রসেস হচ্ছে...";
 
-        // পরিবর্তন ২: ইনপুট টাইপ লেবেল সংরক্ষণ
-        const inputType = selectedGameData.inputType || 'userid';
-        let inputTypeLabel = 'প্লেয়ার আইডি';
-        if (inputType === 'email') {
-            inputTypeLabel = 'ইমেইল';
-        } else if (inputType === 'mobile_number') {
-            inputTypeLabel = 'মোবাইল নম্বর';
-        }
-
         let orderData = {
             userId: currentUser.uid,
             game: selectedGameData.name,
@@ -608,7 +746,6 @@ body.dark-mode .skeleton::before {
             quantity: currentQuantity,
             price: totalPrice,
             playerId: playerId,
-            inputTypeLabel: inputTypeLabel, // লেবেল এখানে যুক্ত করা হলো
             paymentMethod: selectedPayment.name,
             status: 'Pending',
             date: firebase.firestore.FieldValue.serverTimestamp()
@@ -661,14 +798,14 @@ body.dark-mode .skeleton::before {
             window.location.href = 'order-confirmation.html';
 
         } catch (error) {
-            alert("সমস্যা হয়েছে: " + (error.message || error));
+            showToast("সমস্যা হয়েছে: " + (error.message || error));
             btn.disabled = false;
             btn.innerText = "Buy";
         }
     }
 
     function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => alert('কপি করা হয়েছে: ' + text));
+        navigator.clipboard.writeText(text).then(() => showToast('কপি করা হয়েছে: ' + text, 'success'));
     }
 </script>
 </body>
