@@ -176,7 +176,7 @@ body.dark-mode .skeleton::before {
     border-radius: 20px;
 }
 
-/* পরিবর্তন ২ শুরু: Toast Notification CSS */
+/* Toast Notification CSS */
 .toast-notification {
     position: fixed;
     bottom: 90px;
@@ -206,7 +206,6 @@ body.dark-mode .skeleton::before {
 .toast-notification.success {
      background-color: var(--accent-green);
 }
-/* পরিবর্তন ২ শেষ */
 
 </style>
 </head>
@@ -308,7 +307,7 @@ body.dark-mode .skeleton::before {
         }
     });
 
-    // পরিবর্তন ২ শুরু: Toast Notification ফাংশন
+    // Toast Notification ফাংশন
     function showToast(message, type = 'success') {
         const existingToast = document.querySelector('.toast-notification');
         if (existingToast) {
@@ -334,7 +333,6 @@ body.dark-mode .skeleton::before {
             }, 300);
         }, 3000);
     }
-    // পরিবর্তন ২ শেষ
 
     function loadOrderHistory() {
         const container = document.getElementById('orderHistoryContainer');
@@ -372,6 +370,9 @@ body.dark-mode .skeleton::before {
                 
                 const quantityText = order.quantity ? ` x ${order.quantity}` : '';
 
+                // পরিবর্তন ২: ডাইনামিক লেবেল নির্ধারণ
+                const playerIdLabel = order.inputTypeLabel || 'প্লেয়ার আইডি';
+
                 let buttons = '';
                 if (order.status === 'Pending') {
                     buttons = `<div class="action-buttons">
@@ -385,9 +386,7 @@ body.dark-mode .skeleton::before {
                     const code = order.adminNote || order.voucherCode;
                      adminMessageHtml = `
                     <div style="background: rgba(52, 199, 89, 0.1); padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid #34C759;">
-                        <!-- পরিবর্তন ১ শুরু: Code/Note এর পরিবর্তে শুধু Code লেখা হয়েছে -->
                         <p style="font-size: 13px; font-weight: 700; color: #34C759; margin-bottom: 5px;">Code:</p>
-                        <!-- পরিবর্তন ১ শেষ -->
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-family: monospace; font-size: 14px; color: var(--primary-text-color); word-break: break-all;">${code}</span>
                             <i class="fa-regular fa-copy copy-btn" onclick="copyToClipboard('${code}')"></i>
@@ -397,13 +396,21 @@ body.dark-mode .skeleton::before {
 
                 historyHtml += `<div class="topup-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                        <span><strong>${order.game}</strong></span>
+                        <span>গেম: <strong>${order.game}</strong></span>
                         <span class="status-badge status-${order.status}">${order.status}</span>
                     </div>
+                    <!-- পরিবর্তন ১ শুরু: অর্ডার আইডি ও কপি বাটন যুক্ত করা -->
+                    <p style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color); word-break: break-all;">
+                        <span>অর্ডার আইডি:</span>
+                        <strong>#ORD-${orderId}<i class="fa-regular fa-copy copy-btn" onclick="copyToClipboard('${orderId}')"></i></strong>
+                    </p>
+                    <!-- পরিবর্তন ১ শেষ -->
                     <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্যাকেজ:</span><strong>${order.package}${quantityText}</strong></p>
-                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্লেয়ার আইডি:</span><strong>${order.playerId}</strong></p>
+                    <!-- পরিবর্তন ২ শুরু: প্লেয়ার আইডি লেবেল পরিবর্তন -->
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>${playerIdLabel}:</span><strong style="word-break: break-all;">${order.playerId}</strong></p>
+                    <!-- পরিবর্তন ২ শেষ -->
                     <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>দাম:</span><strong>৳ ${parseFloat(order.price).toFixed(2)}</strong></p>
-                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>TrxID:</span><strong>${order.transactionId || 'N/A'}</strong></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>TrxID:</span><strong style="word-break: break-all;">${order.transactionId || 'N/A'}</strong></p>
                     <p style="display:flex; justify-content:space-between; font-size: 14px; color: var(--secondary-text-color);"><span>তারিখ:</span><strong>${orderDate.toLocaleString('bn-BD')}</strong></p>
                     ${adminMessageHtml}
                     ${buttons}
@@ -447,11 +454,9 @@ body.dark-mode .skeleton::before {
                 
                 transaction.delete(orderRef);
             });
-            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
             showToast('অর্ডারটি সফলভাবে বাতিল করা হয়েছে।', 'success');
 
         } catch (error) {
-            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
             showToast('সমস্যা হয়েছে: ' + (error.message || error), 'error');
         }
     }
@@ -460,7 +465,6 @@ body.dark-mode .skeleton::before {
         try {
             const doc = await db.collection('orders').doc(orderId).get();
             if (!doc.exists) { 
-                // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
                 showToast('অর্ডার পাওয়া যায়নি!', 'error'); 
                 return; 
             }
@@ -479,18 +483,15 @@ body.dark-mode .skeleton::before {
             
             if (Object.keys(updates).length > 0) {
                 await db.collection('orders').doc(orderId).update(updates);
-                // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
                 showToast('অর্ডার সফলভাবে আপডেট করা হয়েছে!', 'success');
             }
         } catch (e) { 
-            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
             showToast('আপডেট করতে সমস্যা হয়েছে: ' + e.message, 'error'); 
         }
     }
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            // পরিবর্তন ২: alert এর পরিবর্তে showToast ব্যবহার
             showToast('কপি করা হয়েছে: ' + text, 'success');
         }).catch(err => {
             console.error('Copy failed', err);
