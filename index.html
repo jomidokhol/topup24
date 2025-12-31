@@ -7,6 +7,10 @@
 <title>Vercel Topup BD - Home</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Font Awesome for New Chat Box -->
+<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.1/css/all.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 /* Roboto font for Footer */
@@ -698,64 +702,6 @@ body.dark-mode #termsTitle { color: #00e5ff !important; }
     font-weight: 600;
 }
 
-
-/* --- Support Chat Button & Modal Styles (Added from user.html) --- */
-.support-fab {
-    position: fixed; 
-    bottom: 130px; 
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    background-color: var(--primary-purple);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(123, 97, 255, 0.4);
-    z-index: 1001; /* Above bottom nav */
-}
-.support-fab:active { transform: scale(0.9); }
-
-.chat-popover {
-    position: absolute;
-    right: 70px;
-    top: 50%; transform: translateY(-50%);
-    background: var(--card-bg-color);
-    color: var(--primary-text-color);
-    padding: 8px 12px;
-    border-radius: 8px;
-    box-shadow: var(--soft-shadow);
-    white-space: nowrap;
-    font-size: 13px; font-weight: 600;
-    opacity: 0; visibility: hidden;
-    transition: all 0.3s;
-    pointer-events: none;
-}
-
-.chat-popover::after {
-    content: ''; position: absolute; top: 50%; right: -6px; margin-top: -6px;
-    border-width: 6px; border-style: solid;
-    border-color: transparent transparent transparent var(--card-bg-color);
-}
-.chat-popover.show { opacity: 1; visibility: visible; right: 75px;  }
-
-/* Support Modal Specifics */
-#supportModal .modal-content { display: flex; flex-direction: column; height: 75vh; }
-.support-chat-body { flex-grow: 1; overflow-y: auto; padding: 15px 0; }
-.support-chat-footer { display: flex; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px; }
-body.dark-mode .support-chat-footer { border-color: rgba(255,255,255,0.05); }
-#supportMessageInput { flex-grow: 1; border: none; background: var(--background-color); padding: 12px 15px; border-radius: 20px; color: var(--primary-text-color); font-size: 15px; margin-right: 10px;}
-#supportMessageInput:focus { outline: none; }
-#sendMessageBtn { background: var(--primary-purple); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(123, 97, 255, 0.3); }
-
-.message { padding: 10px 16px; border-radius: 18px; margin-bottom: 8px; max-width: 80%; word-wrap: break-word; font-size: 14px; line-height: 1.4; }
-.message.user { background-color: var(--primary-purple); color: white; align-self: flex-end; border-bottom-right-radius: 4px; margin-left: auto; }
-.message.admin { background-color: var(--background-color); color: var(--primary-text-color); align-self: flex-start; border-bottom-left-radius: 4px; }
-.message-container { display: flex; flex-direction: column; }
-
 /* পরিবর্তন ২ শুরু: স্কেলিটাল লোডার CSS */
 .skeleton {
     background-color: var(--skeleton-bg);
@@ -819,6 +765,361 @@ body.dark-mode .skeleton::before {
 .skeleton-game-image { height: 160px; }
 .skeleton-game-title { height: 48px; }
 /* পরিবর্তন ২ শেষ */
+
+/* --- START: New Chat Box CSS --- */
+#backgrounding {
+    display: none; /* Background is part of the main page, not the chat */
+}
+
+body {
+    /* overflow: hidden is removed from body to allow main page scrolling */
+}
+
+@keyframes zoom {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* This is now just an overlay, not the main background */
+#backgrounding {
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -1;
+    animation: zoom 20s infinite alternate;
+}
+
+/* Support Chat Button */
+.support-chat-button {
+    position: fixed;
+    bottom: 100px; /* Adjusted to be above the nav bar */
+    right: 30px;
+    background-color: #8a2be2; /* Purple Theme */
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1001; /* Above nav bar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.support-chat-button:hover {
+    transform: scale(1.1);
+    background-color: #7b24cc;
+}
+
+.main.chat-box-container { /* Renamed for clarity */
+    background-color: rgba(138, 43, 226, 0.15); /* Light purple glass effect */
+    aspect-ratio: 13/16;
+    width: 400px;
+    max-width: 90vw; /* Responsive */
+    max-height: 80vh; /* Responsive */
+    position: fixed; /* Changed from absolute to fixed */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: bottom right;
+    z-index: 1002; /* On top of everything */
+}
+
+.main.chat-box-container.open {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.main.chat-box-container .header {
+    color: #fff;
+    display: flex;
+    padding: 15px 20px;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+    background-color: rgba(98, 30, 155, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    height: 85px; /* Fixed height for header */
+    /* Resetting styles inherited from main page header */
+    position: relative;
+    width: 100%;
+    max-width: none;
+    left: auto;
+    transform: none;
+    top: auto;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.main.chat-box-container .close-chat {
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.main.chat-box-container .close-chat:hover {
+    color: #ddd;
+}
+
+.main.chat-box-container #pfpname {
+    transition: letter-spacing 0.3s ease;
+    margin: 0;
+    font-weight: 700;
+}
+
+.main.chat-box-container .pfp {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.main.chat-box-container .header .center {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.main.chat-box-container .header .center > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.main.chat-box-container .header .center > div > div {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+}
+
+.main.chat-box-container #support-hours {
+    margin: 0;
+    font-size: 11px;
+    color: #ddd;
+}
+
+.main.chat-box-container .footer {
+    width: 100%;
+    height: 80px;
+    position: absolute;
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    /* Resetting footer styles */
+    background: transparent;
+    border-top: none;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+}
+
+.main.chat-box-container .footer > div {
+     width: 100%; 
+     padding: 0 20px; 
+     display: flex; 
+     align-items: center; 
+     justify-content: space-between;
+}
+
+.main.chat-box-container .text-box {
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: none;
+    padding: 10px 18px;
+    width: 75%;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    transition: width 0.4s ease;
+}
+
+.main.chat-box-container .text-box:hover, .text-box:focus {
+    width: 80%;
+}
+
+.main.chat-box-container .send-ico {
+    color: #fff;
+    background: #8a2be2; /* Purple Theme */
+    border-radius: 100%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.main.chat-box-container .send-ico:hover {
+    background: #7b24cc;
+}
+
+.main.chat-box-container .text-box::placeholder {
+    color: #c6c6c6;
+}
+
+.main.chat-box-container .content {
+    width: 100%;
+    top: 85px; /* Header Height */
+    position: absolute;
+    height: calc(100% - 85px - 80px); /* Full height minus header and footer */
+    color: #afafaf;
+    overflow-y: auto;
+    padding: 10px 15px;
+    scroll-behavior: smooth;
+}
+
+.main.chat-box-container .msg-btn {
+    color: #fff;
+    word-wrap: break-word;
+    border-radius: 20px;
+    display: inline-block;
+    max-width: 85%; 
+    font-size: 14px;
+    text-align: left;
+    position: relative;
+}
+
+.main.chat-box-container .msg-btn p {
+    padding: 10px 15px;
+    margin: 0;
+}
+
+.main.chat-box-container .msg-btn-holder {
+    padding-bottom: 10px; 
+    width: 100%;
+    display: flow-root;
+    position: relative;
+}
+
+.main.chat-box-container .receiver-msg { 
+    background: #4c4c4c; 
+    float: left;
+    border-bottom-left-radius: 5px;
+}
+
+.main.chat-box-container .sender-msg {
+    background: #8a2be2; /* Purple Theme */
+    float: right;
+    border-bottom-right-radius: 5px;
+}
+
+.main.chat-box-container .suggested-actions-container {
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    opacity: 0;
+    margin-bottom: 10px;
+    overflow: hidden;
+    max-height: 300px;
+    transition: opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease, margin-bottom 0.5s ease;
+}
+
+.main.chat-box-container .suggested-action-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+}
+
+.main.chat-box-container .suggested-action-btn:hover {
+    background-color: rgba(138, 43, 226, 0.5);
+    transform: scale(1.05);
+}
+
+.main.chat-box-container .edit-btn {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -120%) scale(0.5);
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    opacity: 0;
+    z-index: 20;
+    transform-origin: bottom center;
+}
+
+.main.chat-box-container .edit-container { display: flex; flex-direction: column; padding: 5px; gap: 5px; }
+.main.chat-box-container .edit-input { background: #fff; color: #333; border-radius: 5px; border: 1px solid #ccc; padding: 8px; font-family: inherit; }
+.main.chat-box-container .edit-controls { display: flex; gap: 5px; justify-content: flex-end; }
+.main.chat-box-container .save-btn, .cancel-btn { padding: 5px 10px; border-radius: 5px; border: none; cursor: pointer; color: white; }
+.main.chat-box-container .save-btn { background: #4CAF50; }
+.main.chat-box-container .cancel-btn { background: #f44336; }
+
+.main.chat-box-container .edited-label {
+    font-size: 10px;
+    color: #e0e0e0;
+    display: block;
+    margin-left: auto;
+    text-align: right;
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+}
+
+.main.chat-box-container .copy-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+    margin-top: 8px;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.main.chat-box-container .copy-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+/* --- END: New Chat Box CSS --- */
 
 </style>
 </head>
@@ -976,12 +1277,6 @@ body.dark-mode .skeleton::before {
         <div class="nav-item" onclick="checkAuthAndGo('orders.html')"> <i class="fa-solid fa-receipt"></i> <span>অর্ডার</span> </div>
         <div class="nav-item" onclick="checkAuthAndGo('profile.html')"> <i class="fa-regular fa-user"></i> <span>প্রোফাইল</span> </div>
     </nav>
-    
-    <!-- Support Chat Button -->
-    <div class="support-fab" id="supportBtn">
-        <i class="fa-solid fa-headset"></i>
-        <span class="chat-popover">কোন সমস্যা ?</span>
-    </div>
 
 </div>
 
@@ -1001,21 +1296,39 @@ body.dark-mode .skeleton::before {
     </div>
 </div>
 
+<!-- START: New Chat Box HTML -->
+<img id="backgrounding" src="https://cdn.pixabay.com/photo/2016/11/29/04/42/conifers-1867371_960_720.jpg" style="display:none;">
 
-<!-- Support Modal -->
-<div id="supportModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>সাপোর্ট চ্যাট</h2>
-            <span class="close-btn" id="supportCloseBtn">&times;</span>
+<div class="support-chat-button">
+    <i class="fas fa-comment-dots"></i>
+</div>
+
+<div class="main chat-box-container">
+    <div class="header">
+        <i class="fas fa-arrow-left close-chat"></i>
+        <div class="center">
+            <div>
+                <div>
+                    <i class="fas fa-user-shield pfp"></i>
+                    <p id="pfpname">Support</p>
+                </div>
+                <p id="support-hours">9:00AM — 11:00PM</p>
+            </div>
         </div>
-        <div class="support-chat-body" id="supportChatBody"></div>
-        <div class="support-chat-footer">
-            <input type="text" id="supportMessageInput" placeholder="আপনার মেসেজ লিখুন...">
-            <button id="sendMessageBtn"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+
+    <div class="content"></div>
+
+    <div class="footer">
+        <div>
+            <input placeholder="Message" class="text-box" name="message">
+            <div class="send-ico">
+                <i class="fas fa-paper-plane"></i>
+            </div>
         </div>
     </div>
 </div>
+<!-- END: New Chat Box HTML -->
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -1503,177 +1816,389 @@ body.dark-mode .skeleton::before {
             }
         });
     }
-    
+
     // ===============================================
-    // Support Chat Functionality (Copied from user.html)
+    // START: New Chat Box Functionality
     // ===============================================
     
-    function formatMessage(text) {
-        let formattedText = text;
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
-        const phoneRegex = /\b(\+?88)?01[3-9][0-9]{8}\b/g;
+    const chatBox = document.querySelector('.main.chat-box-container');
+    const openButton = document.querySelector('.support-chat-button');
+    const closeButtons = document.querySelectorAll('.close-chat');
+    const contentArea = chatBox.querySelector('.content');
+    const sendButton = chatBox.querySelector('.send-ico');
+    const messageInput = chatBox.querySelector('.text-box');
 
-        formattedText = formattedText.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
-        formattedText = formattedText.replace(emailRegex, '<a href="mailto:$&">$&</a>');
-        formattedText = formattedText.replace(phoneRegex, '<a href="tel:$&">$&</a>');
-        
-        return formattedText;
-    }
+    let unsubscribeFromAdminReplies = null; // Firebase listener
 
-    const supportModal = document.getElementById('supportModal');
-    const supportBtn = document.getElementById('supportBtn');
-    const supportCloseBtn = document.getElementById('supportCloseBtn');
-    const sendMessageBtn = document.getElementById('sendMessageBtn');
-    const supportMessageInput = document.getElementById('supportMessageInput');
-    const supportChatBody = document.getElementById('supportChatBody');
-    let unsubscribeSupportChat;
+    const suggestedActions = [
+        'কিভাবে টপ আপ করবো?',
+        'কিভাবে অডার ক্যানসিল করবো?',
+        'মোবাইল নম্বর /ইমেইল /প্লেয়ার আইডি ভুল দিয়ে ফেলেছি!',
+        'আপনার What\'s App নাম্বার দেন!',
+        'টেলিগ্রাম চ্যানেল লিঙ্ক দেন!'
+    ];
+    
+    const autoReplies = {
+        'টপ আপ': 'টপ আপ করতে, দয়া করে আমাদের ওয়েবসাইটে লগইন করে আপনার পছন্দের প্যাকেজটি বেছে নিন এবং পেমেন্ট সম্পন্ন করুন।',
+        'ক্যানসিল': 'অর্ডার ক্যানসিল করতে, আপনার অর্ডার আইডিসহ আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।',
+        'ভুল': 'কোন তথ্য ভুল দিয়ে থাকলে, দ্রুত আমাদের সাপোর্টে আপনার সঠিক তথ্য এবং অর্ডার নাম্বারটি জানান। আমরা সাহায্য করবো।',
+        'whatsapp': {
+             reply: 'আমাদের What\'s App নাম্বার: +8801851956615 যেকোনো প্রয়োজনে মেসেজ দিন।',
+             copyable: '+8801851956615'
+         },
+        'টেলিগ্রাম': 'আমাদের টেলিগ্রাম চ্যানেলে জয়েন করতে এই লিঙ্কে ক্লিক করুন: <a href="https://t.me/verceltopupsupport" style="color: #FFFFFF;" >CLICK HERE!</a>',
+        'তথ্য_লাগবে': 'আপনার অর্ডার আইডি এবং সঠিক মোবাইল নম্বর /ই-মেইল /প্লেয়ার আইডিটি দিন।',
+        'অর্ডার_আইডি_কোথায়': 'শপের অর্ডারস পেজে যান: <br><a href="orders.html" target="_blank" class="suggested-action-btn" style="display: inline-block; margin-top: 10px;">অর্ডারস পেজ</a>',
+        'কি_হলো': 'দয়া করে অপেক্ষা করুন।',
+        'অফ_আওয়ার': 'আমাদের সাপোর্ট চ্যাটের কার্যক্রম কাল সকাল 9:00AM থেকে সচল হবে ধন্যবাদ!'
+    };
 
-    // Chat Popover Logic
-    setInterval(() => {
-        const popover = document.querySelector('.chat-popover');
-        if(popover) {
-            popover.classList.add('show');
-            setTimeout(() => {
-                popover.classList.remove('show');
-            }, 3000);
-        }
-    }, 15000); 
+    const keywords = {
+        'টপ আপ': [/টপ আপ/i, /top up/i, /recharge/i],
+        'ক্যানসিল': [/ক্যানসিল/i, /cancel/i],
+        'ভুল': [/ভুল/i, /wrong/i, /ভুল হয়েছে/i, /mistake/i],
+        'whatsapp': [/what's app/i, /whatsapp/i, /wa/i, /হোয়াটসঅ্যাপ/i],
+        'টেলিগ্রাম': [/টেলিগ্রাম/i, /telegram/i],
+        'তথ্য_লাগবে': [/কি কি তথ্য লাগবে/i, /ki ki lagbe/i, /কি তথ্য লাগবে/i, /কি লাগবে/i, /ki lagbe/i],
+        'অর্ডার_আইডি_কোথায়': [/অর্ডার আইডি কোথায় পাবো/i, /কোথায় পাবো/i, /koi pabo/i, /kothay pabo/i, /order id kothay pabo/i, /order id/i],
+        'কি_হলো': [/কি হলো/i, /ki holo/i, /what happened/i]
+    };
+    
+    let isFirstOpen = true;
+    let awaitingInfoAfterWrongId = false;
 
-    supportBtn.onclick = () => {
-        // Auth check for chat
+    const openChat = () => {
         if (!currentUser) {
             window.location.href = 'login.html';
             return;
         }
 
-        supportModal.style.display = "flex";
-        if (unsubscribeSupportChat) unsubscribeSupportChat(); 
+        const buttonRect = openButton.getBoundingClientRect();
+        chatBox.style.transformOrigin = `${buttonRect.left}px ${buttonRect.top}px`;
+        chatBox.classList.add('open');
+        if (isFirstOpen) {
+            initializeChat();
+            isFirstOpen = false;
+        }
 
-        unsubscribeSupportChat = db.collection('supportMessages')
+        // Listen for new admin replies
+        if (unsubscribeFromAdminReplies) unsubscribeFromAdminReplies(); // Stop previous listener
+
+        unsubscribeFromAdminReplies = db.collection('supportMessages')
             .where('userId', '==', currentUser.uid)
+            .where('sender', '==', 'admin')
+            .where('timestamp', '>', firebase.firestore.Timestamp.now()) // Listen only for messages sent after chat is opened
             .onSnapshot(snapshot => {
-                supportChatBody.innerHTML = '';
-                if (snapshot.empty) {
-                    supportChatBody.innerHTML = '<p style="text-align:center; color: var(--secondary-text-color);">আপনার প্রশ্ন এখানে লিখুন</p>';
-                }
-                
-                let messages = [];
-                snapshot.forEach(doc => messages.push(doc.data()));
-                
-                messages.sort((a, b) => {
-                     const timeA = a.timestamp ? a.timestamp.seconds : 0;
-                     const timeB = b.timestamp ? b.timestamp.seconds : 0;
-                     return timeA - timeB;
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added') {
+                        const adminMessage = change.doc.data();
+                        addMessage(adminMessage.message, 'receiver'); // Requirement 4: Show admin reply on the left
+                    }
                 });
-
-                messages.forEach(messageData => {
-                    const messageDiv = document.createElement('div');
-                    const container = document.createElement('div');
-                    container.className = 'message-container';
-                    messageDiv.className = `message ${messageData.sender}`;
-                    messageDiv.innerHTML = formatMessage(messageData.message);
-                    container.appendChild(messageDiv);
-                    supportChatBody.appendChild(container);
-                });
-                supportChatBody.scrollTop = supportChatBody.scrollHeight;
             });
     };
 
-    supportCloseBtn.onclick = () => {
-        supportModal.style.display = "none";
-        if (unsubscribeSupportChat) {
-            unsubscribeSupportChat();
-            unsubscribeSupportChat = null;
+    const closeChat = () => {
+        chatBox.classList.remove('open');
+        if (unsubscribeFromAdminReplies) {
+            unsubscribeFromAdminReplies();
+            unsubscribeFromAdminReplies = null;
         }
     };
 
-    sendMessageBtn.onclick = async () => {
-        const message = supportMessageInput.value.trim();
-        if (message === '') return;
-        supportMessageInput.value = '';
+    const scrollToBottom = () => contentArea.scrollTop = contentArea.scrollHeight;
 
-        await db.collection('supportMessages').add({
-            userId: currentUser.uid,
-            userName: currentUser.displayName || currentUser.email,
-            message: message,
-            sender: 'user',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    const addMessage = (message, type, options = {}) => {
+        const msgHolder = document.createElement('div');
+        msgHolder.className = 'msg-btn-holder';
+        
+        const msgBtn = document.createElement('div');
+        msgBtn.className = `msg-btn ${type}-msg`;
+        
+        const p = document.createElement('p');
+        p.innerHTML = message;
+        
+        msgBtn.appendChild(p);
+
+        if (options.copyable) {
+            const copyBtn = document.createElement('button');
+            copyBtn.innerHTML = '<i class="far fa-copy"></i> কপি';
+            copyBtn.className = 'copy-btn';
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(options.copyable).then(() => {
+                    copyBtn.textContent = 'কপি হয়েছে!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="far fa-copy"></i> কপি';
+                    }, 2000);
+                });
+            };
+            msgBtn.appendChild(copyBtn);
+        }
+
+        msgHolder.appendChild(msgBtn);
+        
+        msgHolder.style.opacity = 0;
+        msgHolder.style.transform = 'translateY(20px)';
+        msgHolder.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        
+        contentArea.appendChild(msgHolder);
+        scrollToBottom();
+
+        setTimeout(() => {
+            msgHolder.style.opacity = 1;
+            msgHolder.style.transform = 'translateY(0)';
+        }, 10);
+        
+        setTimeout(scrollToBottom, 410);
+
+        return msgHolder;
+    };
+
+    const createSuggestedActions = () => {
+        const container = document.createElement('div');
+        container.className = 'suggested-actions-container';
+        contentArea.appendChild(container);
+
+        suggestedActions.forEach(action => {
+            const button = document.createElement('button');
+            button.className = 'suggested-action-btn';
+            button.textContent = action;
+            button.addEventListener('click', () => sendMessage(action));
+            container.appendChild(button);
+        });
+        
+        setTimeout(() => {
+            container.style.opacity = 1;
+            scrollToBottom();
+        }, 100);
+    };
+    
+    const hideSuggestedActions = () => {
+        const container = contentArea.querySelector('.suggested-actions-container');
+        if (container) {
+            container.style.opacity = '0';
+            container.style.maxHeight = '0px';
+            container.style.paddingTop = '0px';
+            container.style.paddingBottom = '0px';
+            container.style.marginBottom = '0px';
+            setTimeout(() => container.remove(), 500);
+        }
+    };
+
+    const initializeChat = () => {
+        setTimeout(() => {
+            addMessage('আপনাকে কিভাবে সাহাজ্য করতে পারি?', 'receiver');
+            createSuggestedActions();
+        }, 500);
+    };
+
+    const isSupportHoursActive = () => {
+        const now = new Date();
+        const offset = 6; // UTC+6 for Bangladesh
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const bdTime = new Date(utc + (3600000 * offset));
+        const hour = bdTime.getHours();
+        return hour >= 9 && hour < 23;
+    };
+
+    const getAutoReply = (userMessage) => {
+        const lowerCaseMessage = userMessage.toLowerCase();
+        for (const key in keywords) {
+            if (key === 'তথ্য_লাগবে' && !awaitingInfoAfterWrongId) {
+                continue;
+            }
+
+            for (const regex of keywords[key]) {
+                if (regex.test(lowerCaseMessage)) {
+                    if (key === 'তথ্য_লাগবে') {
+                        awaitingInfoAfterWrongId = false;
+                    }
+                    return autoReplies[key];
+                }
+            }
+        }
+        return null;
+    };
+    
+    const isMeaningless = (message) => {
+        const lowerCaseMessage = message.toLowerCase().trim();
+
+        const profanityList = [
+            'fuck', 'bitch', 'sala', 'bal', 'hala', 'magi', 'kutta', 'madarchod',
+            'শালা', 'বাল', 'মাগি', 'কুত্তা', 'খানকি', 'মাদারচোদ'
+        ];
+        for (const word of profanityList) {
+            if (lowerCaseMessage.includes(word)) return true;
+        }
+
+        if (/(.)\1{4,}/.test(lowerCaseMessage)) return true;
+        if (/^[bcdfghjklmnpqrstvwxyz]{6,}$/.test(lowerCaseMessage.replace(/\s/g, ''))) return true;
+        if (/^[\u0995-\u09A8\u09AA-\u09B9\u09DC-\u09DF]{6,}$/.test(lowerCaseMessage.replace(/\s/g, ''))) return true;
+
+        return false;
+    };
+
+    const generateReply = (userMessage) => {
+         if (userMessage === 'মোবাইল নম্বর /ইমেইল /প্লেয়ার আইডি ভুল দিয়ে ফেলেছি!') {
+            awaitingInfoAfterWrongId = true;
+         }
+        
+         setTimeout(() => {
+            if (!isSupportHoursActive()) {
+                addMessage(autoReplies['অফ_আওয়ার'], 'receiver');
+                return;
+            }
+
+            const replyData = getAutoReply(userMessage);
+            if (replyData) {
+                if (typeof replyData === 'object' && replyData.reply) {
+                    addMessage(replyData.reply, 'receiver', { copyable: replyData.copyable });
+                } else {
+                    addMessage(replyData, 'receiver');
+                }
+            } else {
+                if (isMeaningless(userMessage)) {
+                     addMessage('বুঝতে সমস্যা হচ্ছে...', 'receiver');
+                } else {
+                     // Requirement 3: Send this specific user message to admin panel
+                     if (currentUser) {
+                         db.collection('supportMessages').add({
+                             userId: currentUser.uid,
+                             userName: currentUser.displayName || currentUser.email,
+                             message: userMessage,
+                             sender: 'user',
+                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                         }).catch(err => console.error("Error forwarding message to admin:", err));
+                     }
+                     addMessage('এডমিনের রিপ্লায়ের অপেক্ষা করুন!', 'receiver');
+                }
+            }
+        }, 1000);
+    };
+
+    const sendMessage = (text) => {
+        const messageText = text.trim();
+        if (messageText === '') return;
+        addMessage(messageText, 'sender');
+        messageInput.value = '';
+        hideSuggestedActions();
+        generateReply(messageText);
+    };
+    
+    const showEditButton = (messageHolder) => {
+        if (document.querySelector('.edit-btn') || document.querySelector('.edit-container')) return;
+        
+        const messageBubble = messageHolder.querySelector('.sender-msg');
+        if (!messageBubble) return;
+
+        const editBtn = document.createElement('button');
+        editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+        editBtn.className = 'edit-btn';
+        
+        messageBubble.style.position = 'relative'; 
+        messageBubble.appendChild(editBtn);
+
+        setTimeout(() => {
+            editBtn.style.opacity = 1;
+            editBtn.style.transform = 'translate(-50%, -120%) scale(1)';
+        }, 10);
+        
+        editBtn.onclick = (e) => {
+            e.stopPropagation();
+            enterEditMode(messageHolder);
+        };
+
+        const clickOutsideHandler = (e) => {
+            if (!messageHolder.contains(e.target)) {
+                editBtn.remove();
+                document.body.removeEventListener('click', clickOutsideHandler, true);
+            }
+        };
+        setTimeout(() => document.body.addEventListener('click', clickOutsideHandler, true), 0);
+    };
+    
+    const enterEditMode = (messageHolder) => {
+        const messageElement = messageHolder.querySelector('.msg-btn');
+        const p = messageElement.querySelector('p');
+        if (!p) return;
+        const originalText = p.textContent;
+        
+        messageHolder.querySelector('.edit-btn')?.remove();
+
+        const editContainer = document.createElement('div');
+        editContainer.className = 'edit-container';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'edit-input';
+        input.value = originalText;
+        const controls = document.createElement('div');
+        controls.className = 'edit-controls';
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = 'Save';
+        saveBtn.className = 'save-btn';
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.className = 'cancel-btn';
+        
+        controls.appendChild(cancelBtn);
+        controls.appendChild(saveBtn);
+        editContainer.appendChild(input);
+        editContainer.appendChild(controls);
+        messageElement.replaceChild(editContainer, p);
+        input.focus();
+
+        saveBtn.onclick = () => saveEdit(messageHolder, input.value, editContainer);
+        cancelBtn.onclick = () => cancelEdit(messageHolder, originalText, editContainer);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') saveEdit(messageHolder, input.value, editContainer);
         });
     };
 
-    // Draggable Functionality
-    function makeDraggable(element, container) {
-        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        let moved = false;
-
-        element.onmousedown = dragMouseDown;
-        element.ontouchstart = dragMouseDown;
-
-        function dragMouseDown(e) {
-            e = e || window.event;
-            
-            pos3 = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-            pos4 = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-            document.ontouchend = closeDragElement;
-            document.ontouchmove = elementDrag;
-
-            element.style.cursor = 'grabbing';
-            moved = false; 
-        }
-
-        function elementDrag(e) {
-            moved = true;
-            e = e || window.event;
-            if (e.type === 'touchmove') {
-                e.preventDefault(); 
-            }
-
-            const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-            const currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-            pos1 = pos3 - currentX;
-            pos2 = pos4 - currentY;
-            pos3 = currentX;
-            pos4 = currentY;
-
-            let newTop = element.offsetTop - pos2;
-            let newLeft = element.offsetLeft - pos1;
-
-            const maxTop = container.offsetHeight - element.offsetHeight;
-            const maxLeft = container.offsetWidth - element.offsetWidth;
-
-            newTop = Math.max(0, Math.min(newTop, maxTop));
-            newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-
-            element.style.top = newTop + "px";
-            element.style.left = newLeft + "px";
-            element.style.bottom = 'auto';
-            element.style.right = 'auto';
-        }
-
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
-            document.ontouchend = null;
-            document.ontouchmove = null;
-            element.style.cursor = 'pointer';
-        }
+    const saveEdit = (messageHolder, newText, editContainer) => {
+        const messageElement = messageHolder.querySelector('.msg-btn');
+        const newP = document.createElement('p');
+        newP.textContent = newText;
         
-        element.addEventListener('click', function(e) {
-            if (moved) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        }, true);
-    }
+        if (!messageHolder.querySelector('.edited-label')) {
+            const editedLabel = document.createElement('span');
+            editedLabel.textContent = 'Edited';
+            editedLabel.className = 'edited-label';
+            messageHolder.appendChild(editedLabel);
+        }
 
-    // Apply Draggable to Support Button within App Container
-    makeDraggable(document.getElementById('supportBtn'), document.querySelector('.app-container'));
+        messageElement.replaceChild(newP, editContainer);
 
+        const nextMessageHolder = messageHolder.nextElementSibling;
+        if (nextMessageHolder && nextMessageHolder.querySelector('.receiver-msg')) {
+            nextMessageHolder.remove();
+        }
+        generateReply(newText);
+    };
+
+    const cancelEdit = (messageHolder, originalText, editContainer) => {
+        const messageElement = messageHolder.querySelector('.msg-btn');
+        const originalP = document.createElement('p');
+        originalP.textContent = originalText;
+        messageElement.replaceChild(originalP, editContainer);
+    };
+    
+    openButton.addEventListener('click', openChat);
+    closeButtons.forEach(btn => btn.addEventListener('click', closeChat));
+    sendButton.addEventListener('click', () => sendMessage(messageInput.value));
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage(messageInput.value);
+    });
+
+    contentArea.addEventListener('click', (e) => {
+        const messageHolder = e.target.closest('.msg-btn-holder');
+        if (messageHolder && messageHolder.querySelector('.sender-msg') && !messageHolder.querySelector('.edit-container')) {
+            showEditButton(messageHolder);
+        }
+    });
+
+    // ===============================================
+    // END: New Chat Box Functionality
+    // ===============================================
 
     initHome();
 </script>
