@@ -819,16 +819,17 @@ body {
 
 .main.chat-box-container { /* Renamed for clarity */
     background-color: rgba(138, 43, 226, 0.15); /* Light purple glass effect */
-    aspect-ratio: 13/16;
+    height: 700px; /* UPDATED: Set explicit height */
     width: 400px;
     max-width: 90vw; /* Responsive */
-    max-height: 80vh; /* Responsive */
+    max-height: 85vh; /* UPDATED: Increased max height */
     position: fixed; /* Changed from absolute to fixed */
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%) scale(0);
     border-radius: 30px;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     overflow: hidden;
     transition: transform 0.5s ease, opacity 0.5s ease;
@@ -1119,6 +1120,45 @@ body {
 .main.chat-box-container .copy-btn:hover {
     background-color: rgba(255, 255, 255, 0.4);
 }
+
+/* START: Light/Dark Mode Chat Box Styles */
+body:not(.dark-mode) .main.chat-box-container {
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+body:not(.dark-mode) .main.chat-box-container .header {
+    background-color: rgba(240, 240, 240, 0.8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+body:not(.dark-mode) .main.chat-box-container .pfp,
+body:not(.dark-mode) .main.chat-box-container .close-chat {
+    color: #000;
+}
+body:not(.dark-mode) .main.chat-box-container #support-hours {
+    color: #555;
+}
+body:not(.dark-mode) .main.chat-box-container .receiver-msg {
+    background: #e5e5ea;
+    color: #000;
+}
+body:not(.dark-mode) .main.chat-box-container .receiver-msg p {
+    color: #000;
+}
+body:not(.dark-mode) .main.chat-box-container .text-box {
+    color: #000;
+    border-color: rgba(0,0,0,0.4);
+    background-color: rgba(255,255,255,0.5);
+}
+body:not(.dark-mode) .main.chat-box-container .text-box::placeholder {
+    color: #555;
+}
+body:not(.dark-mode) .main.chat-box-container .suggested-action-btn {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: #333;
+}
+/* END: Light/Dark Mode Chat Box Styles */
 /* --- END: New Chat Box CSS --- */
 
 </style>
@@ -1828,7 +1868,7 @@ body {
     const sendButton = chatBox.querySelector('.send-ico');
     const messageInput = chatBox.querySelector('.text-box');
 
-    let unsubscribeFromAdminReplies = null; // Firebase listener
+    let unsubscribeFromMessages = null; // UPDATED: Firebase listener
 
     const suggestedActions = [
         'কিভাবে টপ আপ করবো?',
@@ -1867,6 +1907,7 @@ body {
     let isFirstOpen = true;
     let awaitingInfoAfterWrongId = false;
 
+    // UPDATED openChat function to fetch history and listen for all new messages
     const openChat = () => {
         if (!currentUser) {
             window.location.href = 'login.html';
@@ -1876,37 +1917,44 @@ body {
         const buttonRect = openButton.getBoundingClientRect();
         chatBox.style.transformOrigin = `${buttonRect.left}px ${buttonRect.top}px`;
         chatBox.classList.add('open');
-        if (isFirstOpen) {
-            initializeChat();
-            isFirstOpen = false;
-        }
+        
+        if (unsubscribeFromMessages) unsubscribeFromMessages(); 
 
-        // Listen for new admin replies
-        if (unsubscribeFromAdminReplies) unsubscribeFromAdminReplies(); // Stop previous listener
-
-        unsubscribeFromAdminReplies = db.collection('supportMessages')
+        unsubscribeFromMessages = db.collection('supportMessages')
             .where('userId', '==', currentUser.uid)
-            .where('sender', '==', 'admin')
-            .where('timestamp', '>', firebase.firestore.Timestamp.now()) // Listen only for messages sent after chat is opened
+            .orderBy('timestamp')
             .onSnapshot(snapshot => {
-                snapshot.docChanges().forEach(change => {
-                    if (change.type === 'added') {
-                        const adminMessage = change.doc.data();
-                        addMessage(adminMessage.message, 'receiver'); // Requirement 4: Show admin reply on the left
-                    }
+                contentArea.innerHTML = ''; // Clear previous messages to re-render
+                
+                snapshot.forEach(doc => {
+                    const message = doc.data();
+                    // 'admin' and 'bot' replies are both from support, so they are 'receiver'
+                    const messageType = message.sender === 'user' ? 'sender' : 'receiver';
+                    addMessage(message.message, messageType);
                 });
+
+                // If after loading history, the chat is still empty, it's the first time interaction.
+                if (snapshot.empty) {
+                    initializeChat();
+                }
+                
+                scrollToBottom();
             });
     };
 
     const closeChat = () => {
         chatBox.classList.remove('open');
-        if (unsubscribeFromAdminReplies) {
-            unsubscribeFromAdminReplies();
-            unsubscribeFromAdminReplies = null;
+        if (unsubscribeFromMessages) {
+            unsubscribeFromMessages();
+            unsubscribeFromMessages = null;
         }
     };
 
-    const scrollToBottom = () => contentArea.scrollTop = contentArea.scrollHeight;
+    const scrollToBottom = () => {
+        setTimeout(() => {
+             contentArea.scrollTop = contentArea.scrollHeight;
+        }, 100);
+    }
 
     const addMessage = (message, type, options = {}) => {
         const msgHolder = document.createElement('div');
@@ -1942,14 +1990,13 @@ body {
         msgHolder.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
         
         contentArea.appendChild(msgHolder);
-        scrollToBottom();
 
         setTimeout(() => {
             msgHolder.style.opacity = 1;
             msgHolder.style.transform = 'translateY(0)';
         }, 10);
         
-        setTimeout(scrollToBottom, 410);
+        scrollToBottom();
 
         return msgHolder;
     };
@@ -2038,6 +2085,7 @@ body {
         return false;
     };
 
+    // UPDATED generateReply: This function now ONLY shows ephemeral (non-saved) bot replies
     const generateReply = (userMessage) => {
          if (userMessage === 'মোবাইল নম্বর /ইমেইল /প্লেয়ার আইডি ভুল দিয়ে ফেলেছি!') {
             awaitingInfoAfterWrongId = true;
@@ -2060,32 +2108,41 @@ body {
                 if (isMeaningless(userMessage)) {
                      addMessage('বুঝতে সমস্যা হচ্ছে...', 'receiver');
                 } else {
-                     // Requirement 3: Send this specific user message to admin panel
-                     if (currentUser) {
-                         db.collection('supportMessages').add({
-                             userId: currentUser.uid,
-                             userName: currentUser.displayName || currentUser.email,
-                             message: userMessage,
-                             sender: 'user',
-                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                         }).catch(err => console.error("Error forwarding message to admin:", err));
-                     }
                      addMessage('এডমিনের রিপ্লায়ের অপেক্ষা করুন!', 'receiver');
                 }
             }
         }, 1000);
     };
 
+    // UPDATED sendMessage: Saves every user message to Firestore. UI update is handled by the listener.
     const sendMessage = (text) => {
         const messageText = text.trim();
         if (messageText === '') return;
-        addMessage(messageText, 'sender');
+
+        // Save message to Firestore. The `onSnapshot` listener will handle adding it to the UI.
+        if (currentUser) {
+            db.collection('supportMessages').add({
+                userId: currentUser.uid,
+                userName: currentUser.displayName || currentUser.email,
+                message: messageText,
+                sender: 'user',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(err => {
+                console.error("Error sending message: ", err);
+                // Optionally, show an error message to the user
+            });
+        }
+        
         messageInput.value = '';
         hideSuggestedActions();
+        // Generate a local bot reply if applicable. This reply is not saved to the database.
         generateReply(messageText);
     };
     
+    // Edit functionality remains local and does not interact with the database in this implementation
     const showEditButton = (messageHolder) => {
+        // This function can be kept as is, but editing will not persist if the chat is closed and reopened.
+        // For simplicity based on the request, we will leave this as a local-only feature.
         if (document.querySelector('.edit-btn') || document.querySelector('.edit-container')) return;
         
         const messageBubble = messageHolder.querySelector('.sender-msg');
