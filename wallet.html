@@ -93,8 +93,8 @@ body {
 .new-card-container {
     position: relative;
     height: 225px;
-    width: 375px;
-    max-width: 100%;
+    /* পরিবর্তন ১: কার্ডের দৈর্ঘ্য বাড়ানো হয়েছে */
+    width: 100%; 
     z-index: 100;
     transition: 0.6s;
     transform-style: preserve-3d;
@@ -197,7 +197,7 @@ body {
     left: -40px;
     bottom: -50px;
 }
-/* লাইট মোড স্টাইল */
+/* পরিবর্তন ২: লাইট মোডে টেক্সট কালো করা হয়েছে */
 @media (prefers-color-scheme: light) {
     :root {
         --card-bg: linear-gradient(to right, rgba(156, 39, 176, 0.1), rgba(0, 0, 0, 0.05));
