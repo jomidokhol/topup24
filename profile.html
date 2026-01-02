@@ -17,28 +17,27 @@
 :root {
     --primary-purple: #7B61FF;
     --light-purple: #E9E7FF;
-    --background-color: #F5F5F7; 
-    --card-bg-color: #ffffff;
-    --primary-text-color: #1D1D1F;
-    --secondary-text-color: #86868B;
+    --background-color: #121212; /* Changed */
+    --card-bg-color: #1E1E1E;    /* Changed */
+    --primary-text-color: #FFFFFF; /* Changed */
+    --secondary-text-color: #A0A0A0; /* Changed */
     --accent-red: #FF3B30;
     --border-radius-large: 20px;
     --border-radius-medium: 14px;
     --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     --nav-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
-    --skeleton-bg: #e0e0e0;
+    --skeleton-bg: #333; /* Changed */
+    --wishlist-bg-color: #2A212B; /* Added for wishlist button */
 }
 body.dark-mode {
     --background-color: #121212; 
-    --card-bg-color: #1C1C1E; 
-    --primary-text-color: #F5F5F7;
-    --secondary-text-color: #8E8E93;
+    --card-bg-color: #1E1E1E; 
+    --primary-text-color: #FFFFFF;
+    --secondary-text-color: #A0A0A0;
     --light-purple: #2C2C2E;
     --soft-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     --nav-shadow: 0 -5px 20px rgba(255,255,255,0.05);
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
     --skeleton-bg: #333;
 }
 
@@ -46,9 +45,7 @@ body.dark-mode {
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    /* পরিবর্তন ১ শুরু: টাচ হাইলাইট বন্ধ করা */
     -webkit-tap-highlight-color: transparent;
-    /* পরিবর্তন ১ শেষ */
 }
 body {
     font-family: var(--font-family);
@@ -58,7 +55,6 @@ body {
     transition: background-color 0.3s, color 0.3s;
     padding-bottom: 90px;
 }
-
 .app-container { 
     width: 100%; max-width: 480px; margin: auto; 
     background-color: var(--background-color);
@@ -67,80 +63,101 @@ body {
 
 /* Header */
 .page-header { 
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-top: 10px;
+    display: flex; align-items: center; justify-content: space-between; /* Changed */
+    margin-bottom: 25px; padding-top: 10px;
 }
-.page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-.edit-button {
-    background-color: #7B61FF;
+.page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; } /* Removed margin:auto */
+.edit-button { /* Added */
+    background-color: #6C56F8;
     color: white;
-    padding: 8px 20px;
+    border: none;
+    padding: 8px 18px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    border: none;
-    text-decoration: none;
 }
-
 
 /* Profile Styles */
 .profile-card { 
-    text-align: center; 
-    margin-bottom: 30px; 
-    padding: 30px 20px 20px 20px; 
-    background-color: var(--card-bg-color);
-    border-radius: var(--border-radius-large);
-    position: relative;
-    overflow: hidden;
+    text-align: center; margin-bottom: 30px; padding: 30px 20px; /* Changed padding */
+    background-color: var(--card-bg-color); /* Added */
+    border-radius: var(--border-radius-large); /* Added */
+    position: relative; /* Added for gradient */
+    overflow: hidden; /* Added for gradient */
 }
-.profile-card::before {
+.profile-card::before { /* Added for gradient */
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #A059FF, #FF3B30);
+    background: linear-gradient(90deg, #8A2BE2, #FF69B4, #F77062);
 }
-
 .profile-avatar-large { 
-    width: 100px; 
-    height: 100px; 
-    border-radius: 50%; 
-    object-fit: cover; 
-    margin: 0 auto 15px; 
-    border: 3px solid #1C1C1E;
-    padding: 2px;
-    box-shadow: 0 0 0 3px #3C2D80, 0 0 0 5px #7443C8, 0 0 0 7px #4D879F;
+    width: 100px; height: 100px; /* Changed size */
+    border-radius: 50%; object-fit: cover; margin: 0 auto 15px; 
+    border: 4px solid #333; /* Changed border color */
+    box-shadow: none; /* Removed shadow */
 }
-
-.profile-name { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px;}
-.profile-id { font-size: 14px; color: var(--secondary-text-color); font-weight: 500;}
+.profile-name { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;}
+.profile-id { 
+    font-size: 14px; color: var(--secondary-text-color); font-weight: 500; 
+    background: transparent; /* Changed */
+    padding: 0; /* Changed */
+    border-radius: 0; /* Changed */
+    display: inline-block; 
+    box-shadow: none; /* Changed */
+}
 
 /* Menu Items */
-.profile-menu-item { display: flex; align-items: center; background-color: var(--card-bg-color); padding: 18px 20px; margin-bottom: 15px; border-radius: var(--border-radius-medium); cursor: pointer; transition: all 0.2s; }
-.profile-menu-item:active { transform: scale(0.98); }
-.profile-menu-item .icon-container {
-    width: 35px;
-    height: 35px;
+.profile-menu { /* Added wrapper */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    margin-right: 15px;
+    flex-wrap: wrap;
+    gap: 15px; /* Added gap between items */
 }
-
-.profile-menu-item i { font-size: 18px; color: white; }
-.profile-menu-item span { font-weight: 600; font-size: 16px; }
-
-/* Specific button colors */
-.wallet-btn .icon-container { background-color: #7B61FF; }
-.order-btn .icon-container { background-color: #7B61FF; }
-.wishlist-btn { background-color: #302024 !important; }
-.wishlist-btn .icon-container { background-color: #7B61FF; } /* Heart icon bg */
-.settings-btn .icon-container { background-color: #7B61FF; }
-.logout-btn { background-color: #322129 !important;}
-.logout-btn .icon-container { background-color: #7B61FF; }
+.profile-menu-item { 
+    display: flex; align-items: center; 
+    background-color: var(--card-bg-color); 
+    padding: 15px; /* Changed padding */
+    margin-bottom: 0; /* Removed margin */
+    border-radius: var(--border-radius-medium); 
+    cursor: pointer; 
+    box-shadow: none; /* Removed shadow */
+    transition: all 0.2s; 
+    width: 100%; /* Default to full width */
+}
+.profile-menu-item.half-width { /* Added for side-by-side buttons */
+    width: calc(50% - 7.5px);
+}
+.profile-menu-item.wishlist { /* Added for wishlist button style */
+    background-color: var(--wishlist-bg-color);
+}
+.profile-menu-item:active { transform: scale(0.98); }
+.profile-menu-item .icon-container { /* Added icon container */
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 15px;
+    background-color: #332D5C;
+}
+.profile-menu-item.wishlist .icon-container { /* Wishlist icon container style */
+    background-color: #8A2BE2;
+}
+.profile-menu-item i { 
+    width: auto; /* Changed */
+    margin-right: 0; /* Changed */
+    text-align: center; font-size: 18px; /* Changed */
+    color: #A9A0F4; /* Changed */
+}
+.profile-menu-item.wishlist i { /* Wishlist icon color */
+    color: white;
+}
+.profile-menu-item span { font-weight: 600; font-size: 15px; } /* Changed font size */
 
 /* Settings Section */
 .topup-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); }
@@ -150,7 +167,7 @@ body {
 .theme-switch-container { display: flex; justify-content: space-between; align-items: center; }
 .theme-switch { position: relative; display: inline-block; width: 50px; height: 30px; }
 .theme-switch input { opacity: 0; width: 0; height: 0; }
-.slider-track { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E9E9EA; transition: .4s; border-radius: 30px; }
+.slider-track { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #39393D; transition: .4s; border-radius: 30px; }
 body.dark-mode .slider-track { background-color: #39393D; }
 .slider-track:before { position: absolute; content: ""; height: 26px; width: 26px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 input:checked + .slider-track { background-color: var(--primary-purple); }
@@ -159,26 +176,26 @@ input:checked + .slider-track:before { transform: translateX(20px); }
 /* Bottom Nav */
 .bottom-nav {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%;
-    max-width: 480px; height: 80px; display: flex; justify-content: space-around; align-items: center;
-    background-color: #1C1C1E; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    padding: 0 10px; z-index: 1000;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    max-width: 480px; height: 80px; display: flex; justify-content: space-between; align-items: center;
+    background-color: rgba(28, 28, 30, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); /* Changed */
+    padding: 0 20px; box-shadow: var(--nav-shadow); z-index: 1000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px 20px 0 0; /* Changed */
 }
-
+body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-color: rgba(255, 255, 255, 0.05); }
 .nav-item { cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--secondary-text-color); position: relative; width: 60px; transition: color 0.3s; }
 .nav-item i { font-size: 22px; margin-bottom: 6px; transition: transform 0.2s; }
 .nav-item span { font-size: 11px; font-weight: 600; }
-.nav-item.active { color: var(--primary-text-color); }
-.nav-item-center { position: relative; top: -20px; }
+.nav-item.active { color: var(--primary-purple); }
+.nav-item-center { position: relative; top: -25px; }
 .nav-item-center .icon-bg { 
-    width: 65px; height: 65px; background: var(--primary-purple); border-radius: 50%; 
+    width: 60px; height: 60px; background: var(--primary-purple); border-radius: 50%; 
     display: flex; align-items: center; justify-content: center; 
-    box-shadow: 0 10px 25px rgba(123, 97, 255, 0.3); border: 5px solid #231E39; 
+    box-shadow: 0 10px 25px rgba(123, 97, 255, 0.5); border: 6px solid var(--background-color); 
     transition: transform 0.2s;
 }
 .nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
 
-/* পরিবর্তন ২ শুরু: স্কেলিটাল লোডার CSS */
+/* Skeletal Loader CSS */
 .skeleton {
     background-color: var(--skeleton-bg);
     position: relative;
@@ -192,7 +209,7 @@ input:checked + .slider-track:before { transform: translateX(20px); }
     left: -150%;
     height: 100%;
     width: 150%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
     animation: skeleton-wave 1.5s infinite;
 }
 body.dark-mode .skeleton::before {
@@ -202,29 +219,23 @@ body.dark-mode .skeleton::before {
     0% { left: -150%; }
     100% { left: 150%; }
 }
-.skeleton-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-top: 10px;}
-.skeleton-header-title { height: 26px; width: 120px; }
-.skeleton-edit-btn { height: 38px; width: 80px; border-radius: 20px;}
-
-.skeleton-profile-card { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; padding: 20px 0; background-color: var(--card-bg-color); border-radius: var(--border-radius-large); }
-.skeleton-avatar { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 15px; }
+.skeleton-header-title {
+    height: 26px; width: 120px;
+}
+.skeleton-profile-card { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; padding: 20px 0; }
+.skeleton-avatar { width: 110px; height: 110px; border-radius: 50%; margin-bottom: 15px; }
 .skeleton-name { height: 28px; width: 180px; margin-bottom: 10px; }
-.skeleton-id { height: 24px; width: 150px; }
-.skeleton-menu-item { height: 72px; margin-bottom: 15px; border-radius: var(--border-radius-medium); }
-/* পরিবর্তন ২ শেষ */
+.skeleton-id { height: 24px; width: 100px; border-radius: 20px; }
+.skeleton-menu-item { height: 62px; margin-bottom: 15px; border-radius: var(--border-radius-medium); }
 
 </style>
 </head>
-<body class="dark-mode">
+<body class="dark-mode"> <!-- Set dark-mode by default -->
 
 <div class="app-container">
     
-    <!-- পরিবর্তন ২ শুরু: স্কেলিটাল লোডার HTML -->
     <div id="skeleton-loader">
-        <div class="page-header skeleton-header">
-            <div class="skeleton skeleton-header-title"></div>
-            <div class="skeleton skeleton-edit-btn"></div>
-        </div>
+        <div class="page-header"><div class="skeleton skeleton-header-title"></div></div>
         <div class="skeleton-profile-card">
             <div class="skeleton skeleton-avatar"></div>
             <div class="skeleton skeleton-name"></div>
@@ -234,43 +245,37 @@ body.dark-mode .skeleton::before {
         <div class="skeleton skeleton-menu-item"></div>
         <div class="skeleton skeleton-menu-item"></div>
         <div class="skeleton skeleton-menu-item"></div>
-        <div class="skeleton skeleton-menu-item"></div>
     </div>
-    <!-- পরিবর্তন ২ শেষ -->
     
-    <!-- পরিবর্তন ২ শুরু: মূল কন্টেন্ট এখন হাইড থাকবে -->
     <div id="main-content" style="display: none;">
         <header class="page-header">
             <h2>প্রোফাইল</h2>
-            <a href="#" class="edit-button">এডিট</a>
+            <button class="edit-button">এডিট</button> <!-- Added Edit Button -->
         </header>
 
         <div class="profile-card">
-            <img id="profileScreenAvatar" src="https://i.ibb.co/Fnn20Nn/image.png" alt="User Avatar" class="profile-avatar-large">
-            <h3 class="profile-name" id="profileNameDisplay">suma</h3>
-            <p class="profile-id" id="profileIdDisplay">SUMA@GMAIL.COM</p>
+            <img id="profileScreenAvatar" src="https://i.ibb.co/74CkxSP/avatar.png" alt="User Avatar" class="profile-avatar-large">
+            <h3 class="profile-name" id="profileNameDisplay">Loading...</h3>
+            <p class="profile-id" id="profileIdDisplay">...</p>
         </div>
 
+        <!-- Changed Menu Structure -->
         <div class="profile-menu">
-            <div class="profile-menu-item wallet-btn" onclick="window.location.href='wallet.html'">
-                <div class="icon-container"><i class="fa-solid fa-wallet"></i></div>
-                <span>ওয়ালেট</span>
+            <div class="profile-menu-item half-width" onclick="window.location.href='wallet.html'">
+                <div class="icon-container"><i class="fa-solid fa-wallet"></i></div><span>ওয়ালেট</span>
             </div>
-            <div class="profile-menu-item order-btn" onclick="window.location.href='orders.html'">
-                <div class="icon-container"><i class="fa-solid fa-receipt"></i></div>
-                <span>অর্ডার</span>
+            <div class="profile-menu-item half-width" onclick="window.location.href='orders.html'">
+                <div class="icon-container"><i class="fa-solid fa-receipt"></i></div><span>অর্ডার</span>
             </div>
-            <div class="profile-menu-item wishlist-btn" onclick="window.location.href='wishlist.html'">
-                <div class="icon-container"><i class="fa-solid fa-heart"></i></div>
-                <span>আমার উইশলিস্ট</span>
+            <!-- Added Wishlist Button -->
+            <div class="profile-menu-item wishlist" onclick="window.location.href='wishlist.html'">
+                <div class="icon-container"><i class="fa-solid fa-heart"></i></div><span>আমার উইশলিস্ট</span>
             </div>
-            <div class="profile-menu-item settings-btn" onclick="toggleSettings()">
-                <div class="icon-container"><i class="fa-solid fa-cogs"></i></div>
-                <span>থিম ও সেটিংস</span>
+            <div class="profile-menu-item" onclick="toggleSettings()">
+                <div class="icon-container"><i class="fa-solid fa-cogs"></i></div><span>থিম ও সেটিংস</span>
             </div>
-            <div class="profile-menu-item logout-btn" onclick="handleLogout()">
-                <div class="icon-container"><i class="fa-solid fa-right-from-bracket"></i></div>
-                <span>লগ আউট</span>
+            <div class="profile-menu-item" onclick="handleLogout()">
+                <div class="icon-container"><i class="fa-solid fa-right-from-bracket"></i></div><span>লগ আউট</span>
             </div>
         </div>
         
@@ -280,14 +285,13 @@ body.dark-mode .skeleton::before {
                 <div class="theme-switch-container">
                     <span>ডার্ক মোড</span>
                     <label class="theme-switch">
-                        <input type="checkbox" id="theme-toggle" checked>
+                        <input type="checkbox" id="theme-toggle" checked> <!-- Checked by default -->
                         <span class="slider-track"></span>
                     </label>
                 </div>
             </div>
         </div>
     </div>
-    <!-- পরিবর্তন ২ শেষ -->
 
     <!-- Bottom Nav -->
     <nav class="bottom-nav">
@@ -324,30 +328,25 @@ body.dark-mode .skeleton::before {
 
     // Theme Management
     const themeToggle = document.getElementById('theme-toggle');
-    function applyTheme(theme) {
-        if (theme === 'dark-mode') {
-            document.body.classList.add('dark-mode');
-            themeToggle.checked = true;
-        } else {
-            document.body.classList.remove('dark-mode');
-            themeToggle.checked = false;
-        }
+    // Set default theme to dark if nothing is set
+    if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', 'dark-mode');
     }
-    
-    // On load, apply saved theme or default to dark
-    const savedTheme = localStorage.getItem('theme') || 'dark-mode';
-    applyTheme(savedTheme);
-
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme) {
+        document.body.classList.add(currentTheme);
+        if (currentTheme === 'dark-mode') themeToggle.checked = true;
+    }
     themeToggle.addEventListener('change', () => {
         if (themeToggle.checked) {
             document.body.classList.add('dark-mode');
             localStorage.setItem('theme', 'dark-mode');
         } else {
             document.body.classList.remove('dark-mode');
+            document.body.classList.remove('light-mode'); // remove both to be safe
             localStorage.setItem('theme', 'light-mode');
         }
     });
-
 
     // Toggle Settings Section
     function toggleSettings() {
@@ -358,50 +357,38 @@ body.dark-mode .skeleton::before {
     // --- AUTH & PROFILE DATA UPDATED ---
     auth.onAuthStateChanged(user => {
         if (user) {
-            // 1. Immediate Update from Google Auth (Faster)
+            // 1. Immediate Update (Faster)
             if (user.displayName) document.getElementById('profileNameDisplay').innerText = user.displayName;
-            else document.getElementById('profileNameDisplay').innerText = "suma"; // fallback
-            
-            if(user.email) document.getElementById('profileIdDisplay').innerText = user.email.toUpperCase();
-            else document.getElementById('profileIdDisplay').innerText = "SUMA@GMAIL.COM"; // fallback
-
             if (user.photoURL) document.getElementById('profileScreenAvatar').src = user.photoURL;
-            else document.getElementById('profileScreenAvatar').src = "https://i.ibb.co/Fnn20Nn/image.png";
-
+            // Display email as fallback for ID
+            document.getElementById('profileIdDisplay').innerText = user.email || "N/A";
 
             // 2. Sync with Database (Source of Truth)
             db.collection('users').doc(user.uid).onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
                     
-                    const finalName = data.name || user.displayName || "suma";
+                    const finalName = data.name || user.displayName || "User";
                     document.getElementById('profileNameDisplay').innerText = finalName;
                     
-                    const finalEmail = data.email || user.email || "SUMA@GMAIL.COM";
-                    document.getElementById('profileIdDisplay').innerText = finalEmail.toUpperCase();
+                    // Displaying email instead of profileId as per screenshot
+                    const finalIdText = user.email || data.profileId || "N/A";
+                    document.getElementById('profileIdDisplay').innerText = finalIdText.toUpperCase();
                     
-                    const finalPhoto = data.photoURL || user.photoURL || "https://i.ibb.co/Fnn20Nn/image.png";
+                    const finalPhoto = data.photoURL || user.photoURL || "https://i.ibb.co/74CkxSP/avatar.png";
                     document.getElementById('profileScreenAvatar').src = finalPhoto;
                 }
-                // ডেটা লোড হওয়ার পর লোডার হাইড করে মূল কন্টেন্ট দেখানো
-                setTimeout(() => {
-                    document.getElementById('skeleton-loader').style.display = 'none';
-                    document.getElementById('main-content').style.display = 'block';
-                }, 500); // Small delay to show loader
+                
+                document.getElementById('skeleton-loader').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
                 
             }, (error) => {
                 console.error("Error fetching user data:", error);
-                // যদি কোনো কারণে ডেটা লোড না হয়, তবুও লোডার হাইড করে দিন
                 document.getElementById('skeleton-loader').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
             });
         } else {
-            // For dev purpose, show content. In production, redirect.
-            // window.location.href = 'login.html';
-             setTimeout(() => {
-                    document.getElementById('skeleton-loader').style.display = 'none';
-                    document.getElementById('main-content').style.display = 'block';
-                }, 500);
+            window.location.href = 'login.html';
         }
     });
 
@@ -409,8 +396,6 @@ body.dark-mode .skeleton::before {
     function handleLogout() {
         auth.signOut().then(() => {
             window.location.href = 'login.html';
-        }).catch((error) => {
-            console.error('Sign Out Error', error);
         });
     }
 </script>
