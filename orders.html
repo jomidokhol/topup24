@@ -104,7 +104,6 @@ body {
 .order-tracker-card .copy-icon:active { transform: scale(0.9); }
 
 /* Animated Progress Bar */
-/* পরিবর্তন: লাইনকে আইকনের কাছে আনতে Flexbox থেকে Grid এ পরিবর্তন করা হয়েছে */
 .order-tracker-card .progress-bar {
     display: grid;
     grid-template-columns: auto 1fr auto 1fr auto;
@@ -115,21 +114,30 @@ body {
     text-align: center;
     position: relative;
     z-index: 1;
+    padding-bottom: 1.5em; /* টেক্সটের জন্য জায়গা তৈরি করা হয়েছে */
 }
 .order-tracker-card .progress-bar .step .icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto 8px;
-    font-size: 1.8em;
-    color: var(--secondary-text-color);
-    transition: color 0.5s ease, transform 0.3s ease;
+    margin: 0 auto; /* নিচের মার্জিন সরানো হয়েছে */
+    width: 44px; /* আইকনের জন্য সার্কেল আকৃতি দেওয়া হয়েছে */
+    height: 44px; /* আইকনের জন্য সার্কেল আকৃতি দেওয়া হয়েছে */
+    border-radius: 50%; /* আইকনের জন্য সার্কেল আকৃতি দেওয়া হয়েছে */
+    background-color: #3a3a3c; /* স্ক্রিনশটের মতো ডিফল্ট ব্যাকগ্রাউন্ড */
+    font-size: 1.5em; /* আইকনের আকার ঠিক করা হয়েছে */
+    color: #f5f5f7; /* স্ক্রিনশটের মতো ডিফল্ট আইকন কালার */
+    transition: color 0.5s ease, transform 0.3s ease, background-color 0.5s ease;
 }
 .order-tracker-card .progress-bar .step p {
     font-size: 0.75em;
     color: var(--secondary-text-color);
     margin: 0;
     font-weight: 500;
+    position: absolute; /* লাইন অ্যালাইনমেন্ট ঠিক করার জন্য পজিশন পরিবর্তন */
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 .order-tracker-card .progress-bar .line {
     height: 4px;
@@ -196,32 +204,50 @@ body.dark-mode .inline-edit-input { background-color: #3a3a3c; border-color: #54
 /* DYNAMIC STYLING BASED ON STATE */
 .order-tracker-card.pending .status-badge, .order-tracker-card.approved .status-badge { background-color: var(--accent-orange); }
 .order-tracker-card.pending .total-amount, .order-tracker-card.approved .total-amount { background-color: rgba(255, 149, 0, 0.15); }
-.order-tracker-card.pending .step-1 .icon, .order-tracker-card.pending .step-2 .icon,
-.order-tracker-card.approved .step-1 .icon, .order-tracker-card.approved .step-2 .icon { color: var(--accent-orange); }
-.order-tracker-card.pending .line-1 .line-fill, .order-tracker-card.approved .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-orange); }
+.order-tracker-card.pending .line-1 .line-fill, .order-tracker-card.approved .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-green); } /* কমলা থেকে সবুজ করা হয়েছে */
 .order-tracker-card.pending .action-buttons, .order-tracker-card.approved .action-buttons { visibility: visible; opacity: 1; transform: translateY(0); }
+.order-tracker-card.pending .step-1 .icon, .order-tracker-card.pending .step-2 .icon,
+.order-tracker-card.approved .step-1 .icon, .order-tracker-card.approved .step-2 .icon {
+    background-color: var(--accent-green); /* আইকনের ব্যাকগ্রাউন্ড পরিবর্তন */
+    color: white;
+}
 
 .order-tracker-card.completed .status-badge { background-color: var(--accent-green); }
 .order-tracker-card.completed .total-amount { background-color: rgba(52, 199, 89, 0.15); }
-.order-tracker-card.completed .step .icon { color: var(--accent-green); }
+.order-tracker-card.completed .step .icon {
+    background-color: var(--accent-green); /* আইকনের ব্যাকগ্রাউন্ড পরিবর্তন */
+    color: white;
+}
 .order-tracker-card.completed .line-fill { background-color: var(--accent-green); transform: scaleX(1); }
 .order-tracker-card.completed .line-2 .line-fill { transition-delay: 0.5s; }
 .order-tracker-card.completed .admin-message { visibility: visible; opacity: 1; transform: translateY(0); }
 
 .order-tracker-card.canceled .status-badge { background-color: var(--accent-red); }
 .order-tracker-card.canceled .total-amount { background-color: rgba(255, 59, 48, 0.15); }
-.order-tracker-card.canceled .step-1 .icon { color: var(--accent-green); }
-.order-tracker-card.canceled .step-2 .icon { color: var(--accent-red); }
-.order-tracker-card.canceled .step-3 .icon { color: var(--accent-red); }
+.order-tracker-card.canceled .step-1 .icon {
+    background-color: var(--accent-green); /* আইকনের ব্যাকগ্রাউন্ড পরিবর্তন */
+    color: white;
+}
+.order-tracker-card.canceled .step-2 .icon, .order-tracker-card.canceled .step-3 .icon {
+    background-color: var(--accent-red); /* আইকনের ব্যাকগ্রাউন্ড পরিবর্তন */
+    color: white;
+}
 .order-tracker-card.canceled .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-green); }
 .order-tracker-card.canceled .line-2 .line-fill { background-color: var(--accent-red); transform: scaleX(1); transition-delay: 0.5s; }
 
 .order-tracker-card.rejected .status-badge { background-color: var(--accent-gray); }
 .order-tracker-card.rejected .total-amount { background-color: rgba(142, 142, 147, 0.15); }
-.order-tracker-card.rejected .step-1 .icon { color: var(--accent-green); }
-.order-tracker-card.rejected .step-2 .icon { color: var(--accent-gray); }
+.order-tracker-card.rejected .step-1 .icon {
+    background-color: var(--accent-green); /* আইকনের ব্যাকগ্রাউন্ড পরিবর্তন */
+    color: white;
+}
+.order-tracker-card.rejected .step-2 .icon {
+    background-color: var(--accent-gray); /* আইকনের ব্যাকগ্রাউন্ড পরিবর্তন */
+    color: white;
+}
 .order-tracker-card.rejected .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-green); }
 .order-tracker-card.rejected .line-2 .line-fill { background-color: var(--accent-gray); transform: scaleX(1); transition-delay: 0.5s; }
+
 
 /* Background Decoration */
 .order-tracker-card::before, .order-tracker-card::after { content: ''; position: absolute; display: block; border-radius: 50%; filter: blur(60px); z-index: -1; transition: background-color 0.5s ease; }
