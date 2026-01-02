@@ -404,22 +404,15 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
                 const status = order.status || 'Pending';
                 const statusClass = status.toLowerCase();
 
-                // CHANGE START: Logic for the final step is separated for clarity
-                let finalStepIconClass = 'fa-box-open';
-                let finalStepText = 'ডেলিভার্ড';
-
+                let finalStepHtml = `<div class="icon"><i class="fas fa-box-open"></i></div><p>ডেলিভার্ড</p>`;
                 if (status === 'Completed') {
-                    finalStepIconClass = 'fa-check-circle';
-                    finalStepText = 'ডেলিভার্ড';
+                    finalStepHtml = `<div class="icon"><i class="fas fa-check-circle"></i></div><p>ডেলিভার্ড</p>`;
                 } else if (status === 'Canceled') {
-                    finalStepIconClass = 'fa-times-circle';
-                    finalStepText = 'ক্যানসেল';
+                    finalStepHtml = `<div class="icon"><i class="fas fa-times-circle"></i></div><p>ক্যানসেল</p>`;
                 } else if (status === 'Rejected') {
-                    finalStepIconClass = 'fa-ban';
-                    finalStepText = 'রিজেক্টেড';
+                    finalStepHtml = `<div class="icon"><i class="fas fa-ban"></i></div><p>রিজেক্টেড</p>`;
                 }
-                // CHANGE END
-
+                
                 let buttons = '';
                 if (status === 'Pending' || status === 'Approved') {
                     buttons = `<div class="action-buttons">
@@ -441,7 +434,6 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
                     </div>`;
                 }
 
-                // CHANGE START: Progress bar HTML structure is now more explicit and readable
                 historyHtml += `
                 <div class="order-tracker-card ${statusClass}">
                     <div class="header">
@@ -454,20 +446,11 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
                     </div>
 
                     <div class="progress-bar">
-                        <div class="step step-1">
-                            <div class="icon"><i class="fas fa-receipt"></i></div>
-                            <p>রিসিভড</p>
-                        </div>
+                        <div class="step step-1"><div class="icon"><i class="fas fa-receipt"></i></div><p>রিসিভড</p></div>
                         <div class="line line-1"><div class="line-fill"></div></div>
-                        <div class="step step-2">
-                            <div class="icon"><i class="fas fa-cogs"></i></div>
-                            <p>প্রসেসিং</p>
-                        </div>
+                        <div class="step step-2"><div class="icon"><i class="fas fa-cogs"></i></div><p>প্রসেসিং</p></div>
                         <div class="line line-2"><div class="line-fill"></div></div>
-                        <div class="step step-3">
-                            <div class="icon"><i class="fas ${finalStepIconClass}"></i></div>
-                            <p>${finalStepText}</p>
-                        </div>
+                        <div class="step step-3">${finalStepHtml}</div>
                     </div>
 
                     <div class="order-details">
@@ -487,7 +470,6 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
                         ${buttons}
                     </div>
                 </div>`;
-                // CHANGE END
             });
              container.innerHTML = historyHtml;
         }, error => {
