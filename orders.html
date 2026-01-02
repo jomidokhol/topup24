@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -104,20 +105,21 @@ body {
 .order-tracker-card .copy-icon:active { transform: scale(0.9); }
 
 /* Animated Progress Bar */
-.order-tracker-card .progress-bar { display: flex; align-items: flex-start; margin-bottom: 30px; }
-/* পরিবর্তন ৪: লাইনের জন্য জায়গা নিশ্চিত করতে স্টেপের flex-basis তুলে দিয়ে flex: 1 করা হয়েছে */
+/* পরিবর্তন ১: লাইনকে আইকনের সাথে সেন্টারে আনার জন্য align-items: center করা হয়েছে */
+.order-tracker-card .progress-bar { display: flex; align-items: center; margin-bottom: 30px; }
 .order-tracker-card .progress-bar .step { text-align: center; position: relative; z-index: 1; flex: 1; }
+/* পরিবর্তন ১: আইকনের বৃত্তাকার বক্সটি মুছে ফেলা হয়েছে এবং আইকনের সাইজ বড় করা হয়েছে */
 .order-tracker-card .progress-bar .step .icon {
-    width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    margin: 0 auto 8px; font-size: 1.2em; background-color: var(--card-item-bg); color: var(--secondary-text-color);
-    border: 2px solid var(--card-border-color);
-    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, transform 0.3s ease;
+    display: flex; justify-content: center; align-items: center;
+    margin: 0 auto 8px; font-size: 1.8em; 
+    color: var(--secondary-text-color);
+    transition: color 0.5s ease, transform 0.3s ease;
 }
 .order-tracker-card .progress-bar .step p { font-size: 0.75em; color: var(--secondary-text-color); margin: 0; font-weight: 500; }
-.order-tracker-card .progress-bar .line { flex-grow: 1; height: 4px; background-color: var(--card-border-color); position: relative; margin-top: 18px; }
+/* পরিবর্তন ১: লাইন থেকে margin-top তুলে দেওয়া হয়েছে */
+.order-tracker-card .progress-bar .line { flex-grow: 1; height: 4px; background-color: var(--card-border-color); position: relative; }
 .order-tracker-card .line-fill { position: absolute; top: 0; left: 0; height: 100%; width: 100%; background-color: var(--accent-green); transform-origin: left; transform: scaleX(0); transition: transform 0.5s ease, background-color 0.5s ease; }
 
-/* পরিবর্তন ৫: এনিমেশন যুক্ত করা হয়েছে */
 @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
 .order-tracker-card.pending .step-2 .icon i, .order-tracker-card.approved .step-2 .icon i { animation: pulse 1.5s infinite ease-in-out; }
 
@@ -127,7 +129,6 @@ body {
 .order-tracker-card .detail-item span:first-child { color: var(--secondary-text-color); font-size: 0.9em; }
 .order-tracker-card .detail-item span:last-child { font-weight: 500; color: var(--primary-text-color); text-align: right; word-break: break-all; }
 
-/* পরিবর্তন ২: ইনলাইন এডিটের জন্য ইনপুট স্টাইল */
 .inline-edit-input {
     background-color: var(--card-bg-color);
     color: var(--primary-text-color);
@@ -135,8 +136,8 @@ body {
     border-radius: 6px;
     text-align: right;
     font-family: inherit;
-    font-size: inherit; /* প্যারেন্টের ফন্ট সাইজ ব্যবহার করবে */
-    font-weight: inherit; /* প্যারেন্টের ফন্ট ওয়েট ব্যবহার করবে */
+    font-size: inherit;
+    font-weight: inherit;
     width: 100%;
     max-width: 160px;
     padding: 4px 8px;
@@ -145,16 +146,16 @@ body {
 }
 body.dark-mode .inline-edit-input { background-color: #3a3a3c; border-color: #545458; }
 
-/* পরিবর্তন ১: 'মোট পরিমাণ' বক্সের স্টাইল */
 .order-tracker-card .total-amount { display: flex; justify-content: space-between; padding: 18px; border-radius: 12px; margin-bottom: 20px; font-size: 1.1em; font-weight: bold; transition: background-color 0.5s ease; }
 .order-tracker-card .footer { display: flex; justify-content: space-between; color: var(--secondary-text-color); font-size: 0.8em; }
 
 /* Dynamic Footer for Buttons/Messages */
 .dynamic-footer { margin-top: 0; min-height: 0; transition: all 0.4s ease; position: relative; }
-.order-tracker-card.pending .dynamic-footer,
-.order-tracker-card.completed .dynamic-footer { margin-top: 20px; min-height: 60px; }
-.admin-message, .action-buttons { opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s, visibility 0s; position: absolute; width: 100%; }
+/* পরিবর্তন ৩: কমপ্লিটেড অর্ডারের নিচের অংশ বড় করা হয়েছে */
+.order-tracker-card.pending .dynamic-footer { margin-top: 20px; min-height: 60px; }
+.order-tracker-card.completed .dynamic-footer { margin-top: 20px; min-height: 85px; }
 
+.admin-message, .action-buttons { opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s, visibility 0s; position: absolute; width: 100%; }
 .admin-message { background-color: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.5); border-radius: 12px; padding: 15px; text-align: left; }
 .admin-message .admin-message-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
 .admin-message .admin-message-header p { margin: 0; color: var(--secondary-text-color); font-size: 0.9em; }
@@ -168,30 +169,32 @@ body.dark-mode .inline-edit-input { background-color: #3a3a3c; border-color: #54
 /* DYNAMIC STYLING BASED ON STATE */
 .order-tracker-card.pending .status-badge, .order-tracker-card.approved .status-badge { background-color: var(--accent-orange); }
 .order-tracker-card.pending .total-amount, .order-tracker-card.approved .total-amount { background-color: rgba(255, 149, 0, 0.15); }
+/* পরিবর্তন ১: আইকনের স্টাইল থেকে ব্যাকগ্রাউন্ড ও বর্ডার মুছে فقط রঙ পরিবর্তন করা হয়েছে */
 .order-tracker-card.pending .step-1 .icon, .order-tracker-card.pending .step-2 .icon,
-.order-tracker-card.approved .step-1 .icon, .order-tracker-card.approved .step-2 .icon { background-color: var(--accent-orange); border-color: var(--accent-orange); color: white; }
+.order-tracker-card.approved .step-1 .icon, .order-tracker-card.approved .step-2 .icon { color: var(--accent-orange); }
 .order-tracker-card.pending .line-1 .line-fill, .order-tracker-card.approved .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-orange); }
 .order-tracker-card.pending .action-buttons, .order-tracker-card.approved .action-buttons { visibility: visible; opacity: 1; transform: translateY(0); }
 
 .order-tracker-card.completed .status-badge { background-color: var(--accent-green); }
 .order-tracker-card.completed .total-amount { background-color: rgba(52, 199, 89, 0.15); }
-.order-tracker-card.completed .step .icon { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
+.order-tracker-card.completed .step .icon { color: var(--accent-green); }
 .order-tracker-card.completed .line-fill { background-color: var(--accent-green); transform: scaleX(1); }
 .order-tracker-card.completed .line-2 .line-fill { transition-delay: 0.5s; }
 .order-tracker-card.completed .admin-message { visibility: visible; opacity: 1; transform: translateY(0); }
 
 .order-tracker-card.canceled .status-badge { background-color: var(--accent-red); }
 .order-tracker-card.canceled .total-amount { background-color: rgba(255, 59, 48, 0.15); }
-.order-tracker-card.canceled .step-1 .icon { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
-.order-tracker-card.canceled .step-2 .icon { background-color: var(--accent-red); border-color: var(--accent-red); color: white; }
+.order-tracker-card.canceled .step-1 .icon { color: var(--accent-green); }
+.order-tracker-card.canceled .step-2 .icon { color: var(--accent-red); }
+/* পরিবর্তন ২: ক্যানসেল স্ট্যাটাসের ফাইনাল আইকনটি লাল করা হয়েছে */
+.order-tracker-card.canceled .step-3 .icon { color: var(--accent-red); }
 .order-tracker-card.canceled .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-green); }
 .order-tracker-card.canceled .line-2 .line-fill { background-color: var(--accent-red); transform: scaleX(1); transition-delay: 0.5s; }
 
-/* পরিবর্তন ৩: রিজেক্টেড স্টেটের জন্য আলাদা স্টাইল যুক্ত করা হয়েছে */
 .order-tracker-card.rejected .status-badge { background-color: var(--accent-gray); }
 .order-tracker-card.rejected .total-amount { background-color: rgba(142, 142, 147, 0.15); }
-.order-tracker-card.rejected .step-1 .icon { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
-.order-tracker-card.rejected .step-2 .icon { background-color: var(--accent-gray); border-color: var(--accent-gray); color: white; }
+.order-tracker-card.rejected .step-1 .icon { color: var(--accent-green); }
+.order-tracker-card.rejected .step-2 .icon { color: var(--accent-gray); }
 .order-tracker-card.rejected .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-green); }
 .order-tracker-card.rejected .line-2 .line-fill { background-color: var(--accent-gray); transform: scaleX(1); transition-delay: 0.5s; }
 
@@ -202,7 +205,6 @@ body.dark-mode .inline-edit-input { background-color: #3a3a3c; border-color: #54
 .order-tracker-card.completed::before, .order-tracker-card.completed::after { background-color: rgba(52, 199, 89, 0.15); }
 .order-tracker-card.pending::before, .order-tracker-card.approved::before { background-color: rgba(255, 149, 0, 0.15); }
 .order-tracker-card.canceled::before, .order-tracker-card.canceled::after { background-color: rgba(255, 59, 48, 0.15); }
-/* পরিবর্তন ৩: রিজেক্টেড স্টেটের জন্য ব্যাকগ্রাউন্ড গ্লো যুক্ত করা হয়েছে */
 .order-tracker-card.rejected::before, .order-tracker-card.rejected::after { background-color: rgba(142, 142, 147, 0.2); }
 
 /* --- End of Styles from ordercard.html --- */
