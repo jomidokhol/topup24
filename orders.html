@@ -158,7 +158,9 @@ body {
 }
 
 @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
-.order-tracker-card.pending .step-2 .icon, .order-tracker-card.approved .step-2 .icon { animation: pulse 1.5s infinite ease-in-out; }
+/* শুধু আইকনকে অ্যানিমেট করার জন্য '.icon' এর পর 'i' যোগ করা হয়েছে */
+.order-tracker-card.pending .step-2 .icon i, .order-tracker-card.approved .step-2 .icon i { animation: pulse 1.5s infinite ease-in-out; }
+
 
 /* Order Details & Total */
 .order-tracker-card .order-details { margin-bottom: 20px; }
