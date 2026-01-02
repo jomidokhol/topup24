@@ -6,7 +6,7 @@
 <title>My Wallet - Vercel Topup BD</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic" crossorigin>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 /* money-card.html থেকে ফন্ট ইম্পোর্ট করা হয়েছে */
@@ -93,7 +93,6 @@ body {
 .new-card-container {
     position: relative;
     height: 225px;
-    /* পরিবর্তন ১: কার্ডের দৈর্ঘ্য বাড়ানো হয়েছে */
     width: 100%; 
     z-index: 100;
     transition: 0.6s;
@@ -197,19 +196,18 @@ body {
     left: -40px;
     bottom: -50px;
 }
-/* পরিবর্তন ২: লাইট মোডে টেক্সট কালো করা হয়েছে */
-@media (prefers-color-scheme: light) {
-    :root {
-        --card-bg: linear-gradient(to right, rgba(156, 39, 176, 0.1), rgba(0, 0, 0, 0.05));
-        --text-color-card: #000;
-        --svg-fill: #000;
-        --btn-bg: rgba(0, 0, 0, 0.1);
-        --btn-hover-bg: rgba(0, 0, 0, 0.2);
-        --ghost-bg: rgba(0, 0, 0, 0.03);
-    }
-    .new-card-container .card {
-        border: 1px solid rgba(0, 0, 0, 0.1);
-    }
+
+/* পরিবর্তন ১: লাইট মোডে টেক্সট কালো করার জন্য @media কোয়েরি পরিবর্তন করে class selector ব্যবহার করা হয়েছে */
+body:not(.dark-mode) {
+    --card-bg: linear-gradient(to right, rgba(156, 39, 176, 0.1), rgba(0, 0, 0, 0.05));
+    --text-color-card: #000;
+    --svg-fill: #000;
+    --btn-bg: rgba(0, 0, 0, 0.1);
+    --btn-hover-bg: rgba(0, 0, 0, 0.2);
+    --ghost-bg: rgba(0, 0, 0, 0.03);
+}
+body:not(.dark-mode) .new-card-container .card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 /* ------ নতুন কার্ডের স্টাইল শেষ ------ */
 
