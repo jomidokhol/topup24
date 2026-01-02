@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* money-card.html থেকে ফন্ট ইম্পোর্ট করা হয়েছে */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -28,8 +30,15 @@
     --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     --nav-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
     --skeleton-bg: #e0e0e0;
+    
+    /* money-card.html থেকে নতুন ভ্যারিয়েবল যুক্ত করা হয়েছে */
+    --card-bg: linear-gradient(to right, rgba(156, 39, 176, 0.2), rgba(243, 245, 245, 0.1));
+    --text-color-card: #fff;
+    --svg-fill: #fff;
+    --btn-bg: rgba(255, 255, 255, 0.15);
+    --btn-hover-bg: rgba(255, 255, 255, 0.3);
+    --ghost-bg: rgba(255, 255, 255, 0.05);
 }
 body.dark-mode {
     --background-color: #000000; 
@@ -39,7 +48,6 @@ body.dark-mode {
     --light-purple: #2C2C2E;
     --soft-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     --nav-shadow: 0 -5px 20px rgba(255,255,255,0.05);
-    /* পরিবর্তন ২ এর জন্য CSS ভ্যারিয়েবল */
     --skeleton-bg: #333;
 }
 
@@ -47,9 +55,7 @@ body.dark-mode {
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    /* পরিবর্তন ১ শুরু: টাচ হাইলাইট বন্ধ করা */
     -webkit-tap-highlight-color: transparent;
-    /* পরিবর্তন ১ শেষ */
 }
 body {
     font-family: var(--font-family);
@@ -72,24 +78,141 @@ body {
 }
 .page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: auto; }
 
-/* Wallet Card */
-.wallet-card { 
-    background: linear-gradient(135deg, var(--primary-purple), #9f8eff); 
-    color: white; padding: 35px; border-radius: var(--border-radius-large); 
-    text-align: center; margin-bottom: 30px; position: relative; overflow: hidden;
-    box-shadow: 0 10px 30px rgba(123, 97, 255, 0.3);
+/* ------ money-card.html থেকে নতুন কার্ডের স্টাইল শুরু ------ */
+.card-section-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color-card);
+    perspective: 1000px;
+    margin-bottom: 30px;
+    font-family: "Poppins", sans-serif;
 }
-.wallet-card::before { content: ""; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; }
-.wallet-card p { font-size: 15px; opacity: 0.9; font-weight: 500; }
-.wallet-card h1 { font-size: 42px; margin: 10px 0 20px 0; font-weight: 800; letter-spacing: -1px; }
+.new-card-container {
+    position: relative;
+    height: 225px;
+    width: 375px;
+    max-width: 100%;
+    z-index: 100;
+    transition: 0.6s;
+    transform-style: preserve-3d;
+}
+.new-card-container .card {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    padding: 25px;
+    border-radius: 25px;
+    backdrop-filter: blur(25px);
+    background: var(--card-bg);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: var(--text-color-card);
+}
+.front-face header, .front-face .logo {
+    display: flex;
+    align-items: center;
+}
+.front-face header {
+    justify-content: space-between;
+}
+.front-face .logo img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+.new-card-container h5 {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-color-card);
+}
+.card-balance {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.balance-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+}
+.card-balance svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--svg-fill);
+    margin-right: 10px;
+}
+.card-balance .amount {
+    font-size: 28px;
+    font-weight: 500;
+    margin-right: 5px;
+}
+.card-balance .currency {
+    font-size: 28px;
+    font-weight: 500;
+}
+.add-money-btn {
+    margin-top: 12px;
+    padding: 6px 15px;
+    background-color: var(--btn-bg);
+    color: var(--text-color-card);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+.add-money-btn:hover {
+    background-color: var(--btn-hover-bg);
+}
+.ghost-element {
+    position: absolute;
+    background: var(--ghost-bg);
+    border-radius: 50%;
+    z-index: -1;
+    transition: background 0.3s ease;
+}
+.ghost-1 {
+    height: 180px;
+    width: 180px;
+    right: -60px;
+    top: -70px;
+}
+.ghost-2 {
+    height: 120px;
+    width: 120px;
+    left: -40px;
+    bottom: -50px;
+}
+/* লাইট মোড স্টাইল */
+@media (prefers-color-scheme: light) {
+    :root {
+        --card-bg: linear-gradient(to right, rgba(156, 39, 176, 0.1), rgba(0, 0, 0, 0.05));
+        --text-color-card: #000;
+        --svg-fill: #000;
+        --btn-bg: rgba(0, 0, 0, 0.1);
+        --btn-hover-bg: rgba(0, 0, 0, 0.2);
+        --ghost-bg: rgba(0, 0, 0, 0.03);
+    }
+    .new-card-container .card {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
+/* ------ নতুন কার্ডের স্টাইল শেষ ------ */
 
-/* Button inside wallet card */
-.wallet-card .btn { 
-    background: white; color: var(--primary-purple); box-shadow: none; 
-    width: auto; padding: 12px 30px; border-radius: 30px; font-size: 14px; font-weight: 700; 
-    display: inline-block; cursor: pointer; border: none;
-}
-.wallet-card .btn:active { transform: scale(0.96); }
 
 /* History Section */
 .topup-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 15px; box-shadow: var(--soft-shadow); }
@@ -135,7 +258,7 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
 }
 .nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
 
-/* পরিবর্তন ২ শুরু: স্কেলিটাল লোডার CSS */
+/* স্কেলিটাল লোডার CSS */
 .skeleton {
     background-color: var(--skeleton-bg);
     position: relative;
@@ -161,7 +284,7 @@ body.dark-mode .skeleton::before {
 }
 .skeleton-header-title { height: 26px; width: 140px; margin: auto; }
 .skeleton-wallet-card {
-    height: 180px;
+    height: 225px; /* কার্ডের নতুন উচ্চতা অনুযায়ী পরিবর্তন */
     border-radius: var(--border-radius-large);
     margin-bottom: 30px;
 }
@@ -185,7 +308,6 @@ body.dark-mode .skeleton::before {
     margin-bottom: 15px;
 }
 .skeleton-badge { height: 24px; width: 80px; border-radius: 20px; }
-/* পরিবর্তন ২ শেষ */
 
 </style>
 </head>
@@ -193,7 +315,6 @@ body.dark-mode .skeleton::before {
 
 <div class="app-container">
     
-    <!-- পরিবর্তন ২ শুরু: স্কেলিটাল লোডার HTML -->
     <div id="skeleton-loader">
         <div class="page-header">
             <div class="skeleton skeleton-header-title"></div>
@@ -208,28 +329,42 @@ body.dark-mode .skeleton::before {
             <div class="skeleton skeleton-line" style="width: 80%;"></div>
             <div class="skeleton skeleton-line" style="width: 90%;"></div>
         </div>
-        <div class="skeleton-history-card">
-             <div class="skeleton-card-header">
-                <div class="skeleton skeleton-line" style="width: 40%;"></div>
-                <div class="skeleton skeleton-badge"></div>
-            </div>
-            <div class="skeleton skeleton-line" style="width: 80%;"></div>
-            <div class="skeleton skeleton-line" style="width: 90%;"></div>
-        </div>
     </div>
-    <!-- পরিবর্তন ২ শেষ -->
     
-    <!-- পরিবর্তন ২ শুরু: মূল কন্টেন্ট এখন হাইড থাকবে -->
     <div id="main-content" style="display: none;">
         <header class="page-header">
             <h2>আমার ওয়ালেট</h2>
         </header>
 
-        <div class="wallet-card">
-            <p>আপনার বর্তমান ব্যালেন্স</p>
-            <h1 id="profileWalletBalance">৳ 0.00</h1>
-            <button class="btn" onclick="window.location.href='add-money.html'">অ্যাড মানি</button>
+        <!-- পরিবর্তিত নতুন কার্ড -->
+        <div class="card-section-wrapper">
+            <div class="new-card-container">
+                <div class="card front-face">
+                    <div class="ghost-element ghost-1"></div>
+                    <div class="ghost-element ghost-2"></div>
+                    
+                    <header>
+                      <span class="logo">
+                        <img id="walletProfileImage" src="https://i.ibb.co/74CkxSP/avatar.png" alt="profile_image" />
+                        <h5 id="walletProfileName">...</h5>
+                      </span>
+                    </header>
+            
+                    <div class="card-balance">
+                        <h5>আপনার বর্তমান ব্যালেন্স</h5>
+                        <div class="balance-details">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M21 7H3C2.44772 7 2 7.44772 2 8V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V9C22 7.89543 21.1046 7 20 7H21ZM20 9V18H4V8L20 8V9ZM18 14C18 15.1046 17.1046 16 16 16C14.8954 16 14 15.1046 14 14C14 12.8954 14.8954 12 16 12C17.1046 12 18 12.8954 18 14ZM5 6H19V4H5V6Z"></path>
+                            </svg>
+                            <h5 class="amount" id="profileWalletBalance">0.00</h5>
+                            <span class="currency">৳</span>
+                        </div>
+                        <a href="add-money.html" class="add-money-btn">এড মানি</a>
+                    </div>
+                </div>
+            </div>
         </div>
+
 
         <h3 class="section-title" style="margin-left: 5px;">মানি রিকোয়েস্ট হিস্টোরি</h3>
         
@@ -237,7 +372,6 @@ body.dark-mode .skeleton::before {
             <div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i><p>লোড হচ্ছে...</p></div>
         </div>
     </div>
-    <!-- পরিবর্তন ২ শেষ -->
 
     <!-- Bottom Nav -->
     <nav class="bottom-nav">
@@ -274,7 +408,7 @@ body.dark-mode .skeleton::before {
 
     let currentUser = null;
     const EDIT_WINDOW_MS = 3 * 60 * 1000; // 3 min
-    let isFirstLoad = true; // Flag for skeleton screen
+    let isFirstLoad = true; 
 
     // Theme Check
     if (localStorage.getItem('theme') === 'dark-mode') {
@@ -292,10 +426,23 @@ body.dark-mode .skeleton::before {
     });
 
     function loadWalletData() {
-        // Load Balance
+        // Load Balance, Profile Name and Image
         db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
             if (doc.exists) {
-                document.getElementById('profileWalletBalance').innerText = `৳ ${parseFloat(doc.data().walletBalance || 0).toFixed(2)}`;
+                const userData = doc.data();
+                // Update Balance
+                document.getElementById('profileWalletBalance').innerText = parseFloat(userData.walletBalance || 0).toFixed(2);
+                
+                // Update Profile Name and Image on Wallet Card
+                const finalName = userData.name || currentUser.displayName || "User";
+                document.getElementById('walletProfileName').innerText = finalName;
+                
+                const finalPhoto = userData.photoURL || currentUser.photoURL || "https://i.ibb.co/74CkxSP/avatar.png";
+                document.getElementById('walletProfileImage').src = finalPhoto;
+            } else {
+                 // Fallback if user doc doesn't exist
+                 document.getElementById('walletProfileName').innerText = currentUser.displayName || "User";
+                 document.getElementById('walletProfileImage').src = currentUser.photoURL || "https://i.ibb.co/74CkxSP/avatar.png";
             }
         });
 
@@ -346,7 +493,6 @@ body.dark-mode .skeleton::before {
                 container.innerHTML = historyHtml;
             }
 
-            // পরিবর্তন ২: শুধুমাত্র প্রথমবার ডেটা লোড হওয়ার পর লোডার হাইড করুন
             if (isFirstLoad) {
                 document.getElementById('skeleton-loader').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
@@ -356,7 +502,7 @@ body.dark-mode .skeleton::before {
         }, (error) => {
             console.error("Error fetching money requests:", error);
             container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-exclamation-triangle"></i><p>রিকোয়েস্ট লোড করা যায়নি।</p></div>`;
-            // এরর হলেও লোডার হাইড করুন
+
             if (isFirstLoad) {
                 document.getElementById('skeleton-loader').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
