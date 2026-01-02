@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-/* পরিবর্তন ৩ শুরু: লাইট মোড ভ্যারিয়েবল যুক্ত করা */
 :root {
     --primary-purple: #7B61FF;
     --light-purple: #E9E7FF;
@@ -47,7 +46,6 @@ body.dark-mode {
     --icon-color: #A9A0F4;
     --profile-avatar-border: #333;
 }
-/* পরিবর্তন ৩ শেষ */
 
 * { 
     margin: 0; 
@@ -69,12 +67,10 @@ body {
     min-height: 100vh; position: relative; padding: 20px;
 }
 
-/* পরিবর্তন ২ শুরু: হেডার স্টাইল আপডেট */
 .page-header { 
     display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px;
 }
 .page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: auto; }
-/* পরিবর্তন ২ শেষ */
 
 /* Profile Styles */
 .profile-card { 
@@ -84,6 +80,12 @@ body {
     position: relative;
     overflow: hidden;
     box-shadow: var(--soft-shadow);
+    /* পরিবর্তন ৪ শুরু: ডেকোরেটিভ ব্যাকগ্রাউন্ড এলিমেন্ট যুক্ত করা */
+    background-image:
+        radial-gradient(circle at 100% 0%, rgba(123, 97, 255, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 0% 100%, rgba(255, 105, 180, 0.1) 0%, transparent 45%);
+    background-repeat: no-repeat;
+    /* পরিবর্তন ৪ শেষ */
 }
 .profile-card::before {
     content: '';
@@ -93,32 +95,26 @@ body {
     right: 0;
     height: 4px;
     background: linear-gradient(90deg, #8A2BE2, #FF69B4, #F77062);
+    z-index: 2; /* Ensure it's above background shapes */
 }
 .profile-avatar-large { 
     width: 100px; height: 100px;
     border-radius: 50%; object-fit: cover; margin: 0 auto 15px; 
     border: 4px solid var(--profile-avatar-border);
     box-shadow: none;
+    position: relative; /* Ensure it's above background shapes */
+    z-index: 1;
 }
-.profile-name { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;}
+.profile-name { 
+    font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;
+    position: relative; z-index: 1;
+}
 .profile-id { 
     font-size: 14px; color: var(--secondary-text-color); font-weight: 500; 
     background: transparent; padding: 0; border-radius: 0; 
     display: inline-block; box-shadow: none;
+    position: relative; z-index: 1;
 }
-/* পরিবর্তন ৪ শুরু: ওয়াটারমার্ক স্টাইল */
-.watermark {
-    position: absolute;
-    bottom: 8px;
-    right: 12px;
-    font-size: 9px;
-    font-weight: 500;
-    color: var(--secondary-text-color);
-    opacity: 0.4;
-    pointer-events: none;
-    z-index: 0;
-}
-/* পরিবর্তন ৪ শেষ */
 
 /* Menu Items */
 .profile-menu {
@@ -199,7 +195,6 @@ body.dark-mode .bottom-nav { background-color: rgba(28, 28, 30, 0.9); border-col
 }
 .nav-item-center .icon-bg i { color: white; font-size: 24px; margin: 0; }
 
-/* পরিবর্তন ১ শুরু: স্কেলিটাল লোডার আপডেট */
 .skeleton {
     background-color: var(--skeleton-bg);
     position: relative;
@@ -233,14 +228,12 @@ body.dark-mode .skeleton::before {
 .skeleton-menu-row { display: flex; gap: 15px; margin-bottom: 15px; }
 .skeleton-menu-item { height: 68px; border-radius: var(--border-radius-medium); }
 .skeleton-menu-item.half-width { width: calc(50% - 7.5px); }
-/* পরিবর্তন ১ শেষ */
 </style>
 </head>
-<body> <!-- পরিবর্তন ৩: ডিফল্ট ডার্ক মোড ক্লাস মুছে ফেলা হয়েছে -->
+<body>
 
 <div class="app-container">
     
-    <!-- পরিবর্তন ১ শুরু: স্কেলিটাল লোডার HTML আপডেট -->
     <div id="skeleton-loader">
         <div class="page-header"><div class="skeleton skeleton-header-title"></div></div>
         <div class="skeleton-profile-card">
@@ -256,19 +249,13 @@ body.dark-mode .skeleton::before {
         <div class="skeleton skeleton-menu-item" style="margin-bottom: 15px;"></div>
         <div class="skeleton skeleton-menu-item"></div>
     </div>
-    <!-- পরিবর্তন ১ শেষ -->
     
     <div id="main-content" style="display: none;">
-        <!-- পরিবর্তন ২ শুরু: এডিট বাটন মুছে ফেলা হয়েছে -->
         <header class="page-header">
             <h2>প্রোফাইল</h2>
         </header>
-        <!-- পরিবর্তন ২ শেষ -->
 
         <div class="profile-card">
-            <!-- পরিবর্তন ৪ শুরু: ওয়াটারমার্ক যুক্ত করা -->
-            <div class="watermark">গ্রাফিক্যাল অ্যাসেটস</div>
-            <!-- পরিবর্তন ৪ শেষ -->
             <img id="profileScreenAvatar" src="https://i.ibb.co/74CkxSP/avatar.png" alt="User Avatar" class="profile-avatar-large">
             <h3 class="profile-name" id="profileNameDisplay">Loading...</h3>
             <p class="profile-id" id="profileIdDisplay">...</p>
@@ -347,7 +334,7 @@ body.dark-mode .skeleton::before {
         if (currentTheme === 'dark-mode') {
             themeToggle.checked = true;
         }
-    } else { // ডিফল্ট ডার্ক মোড সেট করা
+    } else {
         document.body.classList.add('dark-mode');
         localStorage.setItem('theme', 'dark-mode');
         themeToggle.checked = true;
