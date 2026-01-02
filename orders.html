@@ -23,12 +23,18 @@
     --secondary-text-color: #86868B;
     --accent-green: #34C759;
     --accent-red: #FF3B30;
+    --accent-orange: #FF9500;
+    --accent-gray: #8e8e93;
     --border-radius-large: 20px;
     --border-radius-medium: 14px;
-    --soft-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --soft-shadow: 0 4px_20px rgba(0, 0, 0, 0.08);
     --nav-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --skeleton-bg: #e0e0e0;
+    
+    /* New variables from ordercard.html for light mode */
+    --card-border-color: #E5E5EA;
+    --card-item-bg: #F2F2F7;
 }
 body.dark-mode {
     --background-color: #000000; 
@@ -36,9 +42,13 @@ body.dark-mode {
     --primary-text-color: #F5F5F7;
     --secondary-text-color: #8E8E93;
     --light-purple: #2C2C2E;
-    --soft-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --soft-shadow: 0 4px_12px rgba(0, 0, 0, 0.5);
     --nav-shadow: 0 -5px 20px rgba(255,255,255,0.05);
     --skeleton-bg: #333;
+
+    /* New variables from ordercard.html for dark mode */
+    --card-border-color: #444;
+    --card-item-bg: #2C2C2E;
 }
 
 * { 
@@ -68,38 +78,104 @@ body {
 }
 .page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: auto; }
 
-/* Order Card Styles */
-.topup-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 15px; box-shadow: var(--soft-shadow); }
-
-.status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: white; }
-.status-Pending { background-color: #FF9500; }
-.status-Approved, .status-Completed { background-color: #34C759; }
-.status-Rejected, .status-Canceled { background-color: var(--accent-red); }
-
-.action-buttons { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 10px;}
-
-.btn { 
-    display: block; width: 100%; 
-    background: var(--primary-purple); 
-    color: white; border: none; 
-    padding: 12px; 
-    border-radius: var(--border-radius-medium); 
-    font-size: 14px; font-weight: 600; 
-    cursor: pointer; text-align: center; 
-    transition: all 0.2s; 
-    box-shadow: 0 8px 20px rgba(123, 97, 255, 0.25); 
-}
-.btn:active { transform: scale(0.98); }
-.btn-danger { background: var(--accent-red); box-shadow: 0 8px 20px rgba(255, 59, 48, 0.25); }
-.btn-secondary { background: var(--secondary-text-color); box-shadow: none; }
-
-.copy-btn { margin-left: 10px; cursor: pointer; color: var(--primary-purple); background: rgba(123, 97, 255, 0.1); padding: 5px 10px; border-radius: 6px; font-size: 14px; transition: 0.2s;}
-.copy-btn:active { transform: scale(0.9); }
-
 /* Empty State */
 .empty-state { text-align: center; padding: 60px 20px; color: var(--secondary-text-color); }
 .empty-state i { font-size: 55px; margin-bottom: 20px; display: block; color: var(--light-purple); }
 .empty-state p { font-size: 16px; font-weight: 500; }
+
+/* --- Start of Styles from ordercard.html --- */
+.order-tracker-card {
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius-large);
+    padding: 25px;
+    width: 100%;
+    box-shadow: var(--soft-shadow);
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    margin-bottom: 15px;
+}
+
+/* Card Header */
+.order-tracker-card .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.order-tracker-card .header h1 { font-size: 1.5em; font-weight: 600; margin: 0; color: var(--primary-text-color);}
+.order-tracker-card .status-badge { padding: 5px 14px; border-radius: 20px; font-size: 0.8em; font-weight: 700; color: white; transition: background-color 0.5s ease; }
+.order-tracker-card .order-id { color: var(--secondary-text-color); font-size: 0.9em; margin-bottom: 25px; display: flex; align-items: center; gap: 8px; word-break: break-all; }
+.order-tracker-card .copy-icon { cursor: pointer; transition: transform 0.2s ease, color 0.2s ease; padding: 4px; }
+.order-tracker-card .copy-icon:active { transform: scale(0.9); }
+
+/* Animated Progress Bar */
+.order-tracker-card .progress-bar { display: flex; align-items: flex-start; margin-bottom: 30px; }
+.order-tracker-card .progress-bar .step { text-align: center; position: relative; z-index: 1; flex-basis: 33.33%; }
+.order-tracker-card .progress-bar .step .icon {
+    width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    margin: 0 auto 8px; font-size: 1.2em; background-color: var(--card-item-bg); color: var(--secondary-text-color);
+    border: 2px solid var(--card-border-color);
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, transform 0.3s ease;
+}
+.order-tracker-card .progress-bar .step p { font-size: 0.75em; color: var(--secondary-text-color); margin: 0; font-weight: 500; }
+.order-tracker-card .progress-bar .line { flex-grow: 1; height: 4px; background-color: var(--card-border-color); position: relative; margin-top: 18px; }
+.order-tracker-card .line-fill { position: absolute; top: 0; left: 0; height: 100%; width: 100%; background-color: var(--accent-green); transform-origin: left; transform: scaleX(0); transition: transform 0.5s ease, background-color 0.5s ease; }
+
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.order-tracker-card.pending .step-2 .icon { animation: pulse 1.5s infinite ease-in-out; }
+
+/* Order Details & Total */
+.order-tracker-card .order-details { margin-bottom: 20px; }
+.order-tracker-card .detail-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background-color: var(--card-item-bg); border-radius: 12px; margin-bottom: 10px; }
+.order-tracker-card .detail-item span:first-child { color: var(--secondary-text-color); font-size: 0.9em; }
+.order-tracker-card .detail-item span:last-child { font-weight: 500; color: var(--primary-text-color); text-align: right; word-break: break-all; }
+.order-tracker-card .total-amount { display: flex; justify-content: space-between; padding: 18px; border-radius: 12px; margin-bottom: 20px; font-size: 1.1em; font-weight: bold; transition: background-color 0.5s ease; }
+.order-tracker-card .footer { display: flex; justify-content: space-between; color: var(--secondary-text-color); font-size: 0.8em; }
+
+/* Dynamic Footer for Buttons/Messages */
+.dynamic-footer { margin-top: 0; min-height: 0; transition: all 0.4s ease; position: relative; }
+.order-tracker-card.pending .dynamic-footer,
+.order-tracker-card.completed .dynamic-footer { margin-top: 20px; min-height: 60px; }
+.admin-message, .action-buttons { opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s; position: absolute; width: 100%; }
+
+.admin-message { background-color: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.5); border-radius: 12px; padding: 15px; text-align: left; }
+.admin-message .admin-message-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.admin-message .admin-message-header p { margin: 0; color: var(--secondary-text-color); font-size: 0.9em; }
+.admin-message .code-text { margin: 0; font-size: 1.1em; font-weight: 500; color: var(--primary-text-color); word-break: break-all; }
+.action-buttons { display: flex; gap: 15px; }
+.action-buttons .btn { display: block; width: 100%; border: none; padding: 14px; border-radius: var(--border-radius-medium); font-size: 1em; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; box-shadow: none; margin-top: 0; }
+.action-buttons .btn:active { transform: scale(0.97); }
+.btn-edit { background-color: var(--secondary-text-color); color: white; }
+.btn-cancel { background-color: var(--accent-red); color: white; }
+
+/* DYNAMIC STYLING BASED ON STATE */
+.order-tracker-card .step.active .icon { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
+.order-tracker-card.pending .status-badge, .order-tracker-card.approved .status-badge { background-color: var(--accent-orange); }
+.order-tracker-card.pending .step-1 .icon, .order-tracker-card.pending .step-2 .icon,
+.order-tracker-card.approved .step-1 .icon, .order-tracker-card.approved .step-2 .icon { background-color: var(--accent-orange); border-color: var(--accent-orange); color: white; }
+.order-tracker-card.pending .line-1 .line-fill, .order-tracker-card.approved .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-orange); }
+.order-tracker-card.pending .action-buttons, .order-tracker-card.approved .action-buttons { visibility: visible; opacity: 1; transform: translateY(0); transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s, visibility 0s; }
+
+.order-tracker-card.completed .status-badge { background-color: var(--accent-green); }
+.order-tracker-card.completed .step .icon { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
+.order-tracker-card.completed .line-fill { background-color: var(--accent-green); transform: scaleX(1); }
+.order-tracker-card.completed .line-2 .line-fill { transition-delay: 0.5s; }
+.order-tracker-card.completed .admin-message { visibility: visible; opacity: 1; transform: translateY(0); transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s, visibility 0s; }
+
+.order-tracker-card.canceled .status-badge, .order-tracker-card.rejected .status-badge { background-color: var(--accent-red); }
+.order-tracker-card.canceled .step-1 .icon, .order-tracker-card.rejected .step-1 .icon { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
+.order-tracker-card.canceled .step-2 .icon, .order-tracker-card.rejected .step-2 .icon { background-color: var(--accent-red); border-color: var(--accent-red); color: white; }
+.order-tracker-card.canceled .line-1 .line-fill, .order-tracker-card.rejected .line-1 .line-fill { transform: scaleX(1); background-color: var(--accent-green); }
+.order-tracker-card.canceled .line-2 .line-fill, .order-tracker-card.rejected .line-2 .line-fill { background-color: var(--accent-red); transform: scaleX(1); transition-delay: 0.5s; }
+
+/* Background Decoration */
+.order-tracker-card::before, .order-tracker-card::after { content: ''; position: absolute; display: block; border-radius: 50%; filter: blur(60px); z-index: -1; transition: background-color 0.5s ease; }
+.order-tracker-card::before { width: 150px; height: 150px; top: -60px; right: -60px; background-color: rgba(123, 97, 255, 0.1); }
+.order-tracker-card::after { width: 200px; height: 200px; bottom: -80px; left: -80px; background-color: rgba(0, 122, 255, 0.08); }
+.order-tracker-card.completed::before, .order-tracker-card.completed::after { background-color: rgba(52, 199, 89, 0.15); }
+.order-tracker-card.pending::before, .order-tracker-card.approved::before { background-color: rgba(255, 149, 0, 0.15); }
+.order-tracker-card.canceled::before, .order-tracker-card.canceled::after,
+.order-tracker-card.rejected::before, .order-tracker-card.rejected::after { background-color: rgba(255, 59, 48, 0.15); }
+
+/* --- End of Styles from ordercard.html --- */
+
 
 /* Bottom Nav */
 .bottom-nav {
@@ -218,17 +294,8 @@ body.dark-mode .skeleton::before {
     </header>
 
     <div id="orderHistoryContainer">
+        <!-- Skeleton Loader -->
         <div id="skeleton-loader">
-            <div class="skeleton-card">
-                <div class="skeleton-header">
-                    <div class="skeleton skeleton-line" style="width: 60%;"></div>
-                    <div class="skeleton skeleton-badge"></div>
-                </div>
-                <div class="skeleton skeleton-line" style="width: 80%;"></div>
-                <div class="skeleton skeleton-line" style="width: 90%;"></div>
-                <div class="skeleton skeleton-line" style="width: 50%;"></div>
-                <div class="skeleton skeleton-line" style="width: 70%;"></div>
-            </div>
             <div class="skeleton-card">
                 <div class="skeleton-header">
                     <div class="skeleton skeleton-line" style="width: 60%;"></div>
@@ -307,30 +374,18 @@ body.dark-mode .skeleton::before {
         }
     });
 
-    // Toast Notification ফাংশন
+    // Toast Notification
     function showToast(message, type = 'success') {
         const existingToast = document.querySelector('.toast-notification');
-        if (existingToast) {
-            existingToast.remove();
-        }
-
+        if (existingToast) { existingToast.remove(); }
         const toast = document.createElement('div');
         toast.className = `toast-notification ${type}`;
         toast.textContent = message;
-
         document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 100);
-
+        setTimeout(() => toast.classList.add('show'), 100);
         setTimeout(() => {
             toast.classList.remove('show');
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            }, 300);
+            setTimeout(() => toast.parentNode && toast.parentNode.removeChild(toast), 300);
         }, 3000);
     }
 
@@ -340,6 +395,7 @@ body.dark-mode .skeleton::before {
 
         db.collection('orders').where('userId', '==', currentUser.uid)
         .onSnapshot(querySnapshot => {
+            document.getElementById('skeleton-loader')?.remove();
             if (querySnapshot.empty) {
                 container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-receipt"></i><p>কোনো অর্ডার পাওয়া যায়নি।</p></div>`;
                 badge.style.display = 'none'; 
@@ -351,16 +407,12 @@ body.dark-mode .skeleton::before {
             querySnapshot.forEach(doc => {
                 const data = doc.data();
                 orders.push({ id: doc.id, ...data });
-                if(data.status === 'Pending') pendingCount++;
+                if(data.status === 'Pending' || data.status === 'Approved') pendingCount++;
             });
 
             badge.style.display = pendingCount > 0 ? 'block' : 'none';
             
-            orders.sort((a, b) => {
-                 const dateA = a.date ? a.date.seconds : 0;
-                 const dateB = b.date ? b.date.seconds : 0;
-                 return dateB - dateA;
-            });
+            orders.sort((a, b) => (b.date?.seconds || 0) - (a.date?.seconds || 0));
 
             let historyHtml = '';
             orders.forEach(order => {
@@ -369,51 +421,75 @@ body.dark-mode .skeleton::before {
                 const isEditable = (new Date() - orderDate) < EDIT_WINDOW_MS && order.status === 'Pending';
                 
                 const quantityText = order.quantity ? ` x ${order.quantity}` : '';
-
-                // পরিবর্তন ২: ডাইনামিক লেবেল নির্ধারণ
                 const playerIdLabel = order.inputTypeLabel || 'প্লেয়ার আইডি';
+                const status = order.status || 'Pending'; // Default status
+                const statusClass = status.toLowerCase();
 
+                let finalStepHtml = `<div class="icon"><i class="fas fa-box-open"></i></div><p>ডেলিভার্ড</p>`;
+                if (status === 'Completed') {
+                    finalStepHtml = `<div class="icon"><i class="fas fa-check-circle"></i></div><p>ডেলিভার্ড</p>`;
+                } else if (status === 'Canceled') {
+                    finalStepHtml = `<div class="icon"><i class="fas fa-times-circle"></i></div><p>ক্যানসেল</p>`;
+                } else if (status === 'Rejected') {
+                    finalStepHtml = `<div class="icon"><i class="fas fa-ban"></i></div><p>রিজেক্টেড</p>`;
+                }
+                
                 let buttons = '';
-                if (order.status === 'Pending') {
+                if (status === 'Pending' || status === 'Approved') {
                     buttons = `<div class="action-buttons">
-                            ${isEditable ? `<button class="btn btn-secondary" onclick="editOrder('${orderId}')">এডিট</button>` : ''}
-                            <button class="btn btn-danger" onclick="cancelOrder('${orderId}')">মুছে ফেলুন</button>
+                            ${isEditable ? `<button class="btn btn-edit" onclick="editOrder('${orderId}')">এডিট</button>` : ''}
+                            <button class="btn btn-cancel" onclick="cancelOrder('${orderId}')">অর্ডার বাতিল</button>
                         </div>`;
                 }
-
+                
                 let adminMessageHtml = '';
-                if (order.adminNote || order.voucherCode) { 
-                    const code = order.adminNote || order.voucherCode;
+                const code = order.adminNote || order.voucherCode;
+                if (code && status === 'Completed') {
                      adminMessageHtml = `
-                    <div style="background: rgba(52, 199, 89, 0.1); padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid #34C759;">
-                        <p style="font-size: 13px; font-weight: 700; color: #34C759; margin-bottom: 5px;">Code:</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-family: monospace; font-size: 14px; color: var(--primary-text-color); word-break: break-all;">${code}</span>
-                            <i class="fa-regular fa-copy copy-btn" onclick="copyToClipboard('${code}')"></i>
+                     <div class="admin-message">
+                        <div class="admin-message-header">
+                            <p>CODE</p>
+                            <span class="copy-icon" onclick="copyToClipboard('${code}')"><i class="far fa-copy"></i></span>
                         </div>
+                        <p class="code-text">${code}</p>
                     </div>`;
                 }
 
-                historyHtml += `<div class="topup-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                        <span>গেম: <strong>${order.game}</strong></span>
-                        <span class="status-badge status-${order.status}">${order.status}</span>
+                historyHtml += `
+                <div class="order-tracker-card ${statusClass}">
+                    <div class="header">
+                        <h1>${order.game}</h1>
+                        <span class="status-badge">${status}</span>
                     </div>
-                    <!-- পরিবর্তন ১ শুরু: অর্ডার আইডি ও কপি বাটন যুক্ত করা -->
-                    <p style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color); word-break: break-all;">
-                        <span>অর্ডার আইডি:</span>
-                        <strong>#ORD-${orderId}<i class="fa-regular fa-copy copy-btn" onclick="copyToClipboard('${orderId}')"></i></strong>
-                    </p>
-                    <!-- পরিবর্তন ১ শেষ -->
-                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>প্যাকেজ:</span><strong>${order.package}${quantityText}</strong></p>
-                    <!-- পরিবর্তন ২ শুরু: প্লেয়ার আইডি লেবেল পরিবর্তন -->
-                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>${playerIdLabel}:</span><strong style="word-break: break-all;">${order.playerId}</strong></p>
-                    <!-- পরিবর্তন ২ শেষ -->
-                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>দাম:</span><strong>৳ ${parseFloat(order.price).toFixed(2)}</strong></p>
-                    <p style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size: 14px; color: var(--secondary-text-color);"><span>TrxID:</span><strong style="word-break: break-all;">${order.transactionId || 'N/A'}</strong></p>
-                    <p style="display:flex; justify-content:space-between; font-size: 14px; color: var(--secondary-text-color);"><span>তারিখ:</span><strong>${orderDate.toLocaleString('bn-BD')}</strong></p>
-                    ${adminMessageHtml}
-                    ${buttons}
+                    <div class="order-id">
+                        <span>#ORD-${orderId.substring(0, 8).toUpperCase()}</span>
+                        <span class="copy-icon" onclick="copyToClipboard('${orderId}')"><i class="far fa-copy"></i></span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="step step-1"><div class="icon"><i class="fas fa-receipt"></i></div><p>রিসিভড</p></div>
+                        <div class="line line-1"><div class="line-fill"></div></div>
+                        <div class="step step-2"><div class="icon"><i class="fas fa-cogs"></i></div><p>প্রসেসিং</p></div>
+                        <div class="line line-2"><div class="line-fill"></div></div>
+                        <div class="step step-3" id="final-step">${finalStepHtml}</div>
+                    </div>
+
+                    <div class="order-details">
+                        <div class="detail-item"><span>প্যাকেজ</span><span>${order.package}${quantityText}</span></div>
+                        <div class="detail-item"><span>${playerIdLabel}</span><span>${order.playerId}</span></div>
+                        <div class="detail-item"><span>TrxID</span><span>${order.transactionId || 'N/A'}</span></div>
+                    </div>
+
+                    <div class="total-amount"><span>মোট পরিশোধ</span><span>৳ ${parseFloat(order.price).toFixed(2)}</span></div>
+                    <div class="footer">
+                        <span>${orderDate.toLocaleDateString('bn-BD')}</span>
+                        <span>${orderDate.toLocaleTimeString('bn-BD', { hour: '2-digit', minute:'2-digit' })}</span>
+                    </div>
+                    
+                    <div class="dynamic-footer">
+                        ${adminMessageHtml}
+                        ${buttons}
+                    </div>
                 </div>`;
             });
              container.innerHTML = historyHtml;
@@ -436,7 +512,7 @@ body.dark-mode .skeleton::before {
                 if (!orderDoc.exists) throw "অর্ডারটি পাওয়া যায়নি।";
 
                 const orderData = orderDoc.data();
-                if (orderData.status !== 'Pending') throw "এই অর্ডারটি এখন আর ক্যানসেল করা যাবে না।";
+                if (orderData.status !== 'Pending' && orderData.status !== 'Approved') throw "এই অর্ডারটি এখন আর ক্যানসেল করা যাবে না।";
 
                 if (orderData.transactionId === 'WALLET_PAY' || orderData.paymentMethod === 'Wallet' || orderData.paymentMethod === 'My Wallet') {
                     const userRef = db.collection('users').doc(orderData.userId);
@@ -449,10 +525,18 @@ body.dark-mode .skeleton::before {
                         transaction.update(userRef, { 
                             walletBalance: currentBalance + refundAmount 
                         });
+                        
+                        // Change status to Canceled instead of deleting
+                        transaction.update(orderRef, { status: 'Canceled' });
+                        
+                    } else {
+                         // If user doesn't exist, just cancel
+                        transaction.update(orderRef, { status: 'Canceled' });
                     }
+                } else {
+                    // For other payment methods, just update status
+                    transaction.update(orderRef, { status: 'Canceled' });
                 }
-                
-                transaction.delete(orderRef);
             });
             showToast('অর্ডারটি সফলভাবে বাতিল করা হয়েছে।', 'success');
 
@@ -460,6 +544,11 @@ body.dark-mode .skeleton::before {
             showToast('সমস্যা হয়েছে: ' + (error.message || error), 'error');
         }
     }
+    
+    // Note: The original cancelOrder function deleted the order. 
+    // This modified version changes its status to 'Canceled' to fit the new UI.
+    // To revert to deleting, replace transaction.update(orderRef, { status: 'Canceled' }); with transaction.delete(orderRef);
+    
 
     async function editOrder(orderId) {
         try {
@@ -471,7 +560,7 @@ body.dark-mode .skeleton::before {
             const order = doc.data();
             
             const newPlayerId = prompt('আপনার নতুন প্লেয়ার আইডি দিন:', order.playerId);
-            const newTransactionId = prompt('নতুন ট্রানজেকশন আইডি দিন:', order.transactionId);
+            const newTransactionId = prompt('নতুন ট্রানজেকশন আইডি দিন (যদি থাকে):', order.transactionId);
 
             const updates = {};
             if (newPlayerId && newPlayerId.trim() !== '' && newPlayerId !== order.playerId) {
@@ -492,7 +581,7 @@ body.dark-mode .skeleton::before {
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            showToast('কপি করা হয়েছে: ' + text, 'success');
+            showToast('কপি করা হয়েছে!', 'success');
         }).catch(err => {
             console.error('Copy failed', err);
             showToast('কপি করা সম্ভব হয়নি।', 'error');
