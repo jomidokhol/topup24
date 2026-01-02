@@ -62,40 +62,84 @@ body {
     min-height: 100vh; position: relative; padding: 20px;
 }
 
-/* Header */
-.page-header { 
-    display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px;
-}
-/* পরিবর্তিত Back Button CSS */
-.back-btn { 
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 3;
-    font-size: 20px; cursor: pointer; color: #ffffff; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 50%; box-shadow: var(--soft-shadow); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-}
-.page-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: 0 auto; }
-
-/* নতুন Banner Container CSS */
-.banner-container {
-    position: relative;
+/* New Page Header */
+.new-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
     margin-bottom: 25px;
+    color: var(--primary-text-color);
 }
-.banner-container::before {
-    content: '';
+.new-header-btn {
+    font-size: 20px;
+    cursor: pointer;
+    background: var(--card-bg-color);
+    border-radius: 50%;
+    box-shadow: var(--soft-shadow);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.new-page-header h2 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-align: center;
+}
+
+/* New Game Banner */
+.new-banner-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 25px;
+    border-radius: var(--border-radius-large);
+    overflow: hidden;
+    box-shadow: var(--soft-shadow);
+}
+.new-banner-bg {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+.banner-overlay {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 80px; /* Shadow height */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent);
-    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
-    z-index: 2;
-    pointer-events: none;
+    padding: 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+.banner-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--border-radius-medium);
+    border: 2px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+}
+.banner-text {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.banner-text h3 {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+}
+.banner-text p {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
 }
 
-/* Game Banner পরিবর্তিত CSS */
-.game-banner { width: 100%; height: 160px; object-fit: cover; border-radius: var(--border-radius-large); box-shadow: var(--soft-shadow); }
 
 /* Sections */
 .topup-section { background-color: var(--card-bg-color); border-radius: var(--border-radius-large); padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); }
@@ -261,8 +305,8 @@ body.dark-mode .skeleton::before {
     100% { left: 150%; }
 }
 
-.skeleton-header { display: flex; align-items: center; margin-bottom: 25px; padding-top: 10px; }
-.skeleton-back-btn { width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; }
+.skeleton-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; padding-top: 10px; }
+.skeleton-back-btn { width: 40px; height: 40px; border-radius: 50%; }
 .skeleton-title { height: 26px; width: 150px; }
 .skeleton-banner { height: 160px; border-radius: var(--border-radius-large); margin-bottom: 25px; }
 .skeleton-section {
@@ -334,6 +378,7 @@ body.dark-mode .skeleton::before {
         <div class="skeleton-header">
             <div class="skeleton skeleton-back-btn"></div>
             <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-back-btn"></div>
         </div>
         <div class="skeleton skeleton-banner"></div>
 
@@ -362,14 +407,27 @@ body.dark-mode .skeleton::before {
     
     <!-- মূল কন্টেন্ট এখন হাইড থাকবে -->
     <div id="main-content" style="display: none;">
-        <header class="page-header">
-             <h2 id="gameTitle">Top Up</h2>
+        <!-- New Header -->
+        <header class="new-page-header">
+            <div class="new-header-btn" onclick="window.location.href='index.html'">
+                <i class="fa-solid fa-arrow-left"></i>
+            </div>
+            <h2 id="headerGameTitle">Game</h2>
+            <div class="new-header-btn" id="wishlistBtn">
+                <i class="fa-regular fa-heart"></i>
+            </div>
         </header>
 
-        <!-- পরিবর্তিত ব্যানার এবং ব্যাক বাটন কন্টেইনার -->
-        <div class="banner-container">
-            <i class="fa-solid fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
-            <img id="gameBanner" src="" alt="Game Banner" class="game-banner">
+        <!-- New Banner -->
+        <div class="new-banner-container">
+            <img id="gameBanner" src="" alt="Game Banner" class="new-banner-bg">
+            <div class="banner-overlay">
+                <img id="gameLogo" src="" alt="Game Logo" class="banner-logo">
+                <div class="banner-text">
+                    <h3 id="bannerGameTitle">Game Name</h3>
+                    <p>Official Topup Partner</p>
+                </div>
+            </div>
         </div>
 
         <!-- Step 1: Input -->
@@ -488,8 +546,10 @@ body.dark-mode .skeleton::before {
 
     function loadPageData() {
         // Set Game Info
-        document.getElementById('gameTitle').innerText = selectedGameData.name;
+        document.getElementById('headerGameTitle').innerText = selectedGameData.name;
+        document.getElementById('bannerGameTitle').innerText = selectedGameData.name;
         document.getElementById('gameBanner').src = selectedGameData.banner;
+        document.getElementById('gameLogo').src = selectedGameData.logo;
         
         const inputLabel = document.getElementById('inputStepTitle');
         const inputField = document.getElementById('playerId');
